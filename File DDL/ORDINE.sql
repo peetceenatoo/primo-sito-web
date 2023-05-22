@@ -1,0 +1,17 @@
+CREATE TABLE `primo-sito-web`.`ORDINE` (
+`Id` int AUTO_INCREMENT NOT NULL,
+`TotaleOrdine` int NOT NULL,
+`IdFornitore` int NOT NULL,
+`SpeseSpedizione` int NOT NULL,
+`Indirizzo` varchar(45) NOT NULL,
+`Email` varchar(45) NOT NULL,
+PRIMARY KEY (`Id`),
+
+CONSTRAINT FOREIGN KEY (`IdFornitore`) 
+REFERENCES `FORNITORE` (`Id`)
+ON DELETE RESTRICT ON UPDATE CASCADE,
+
+CONSTRAINT FOREIGN KEY (`Email`) 
+REFERENCES `UTENTE` (`Email`)
+ON DELETE RESTRICT ON UPDATE CASCADE
+)
