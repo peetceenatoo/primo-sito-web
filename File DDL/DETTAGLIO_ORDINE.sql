@@ -3,7 +3,7 @@ CREATE TABLE `primo-sito-web`.`DETTAGLIO_ORDINE` (
 `IdProdotto` int NOT NULL,
 `IdFornitore` int NOT NULL,
 `Quantita` int NOT NULL,
-`Prezzo` decimal(10,2) NOT NULL,
+`Prezzo` DECIMAL(10,2) NOT NULL,
 PRIMARY KEY (`IdOrdine`,`IdProdotto`,`IdFornitore`),
 
 CONSTRAINT FOREIGN KEY (`IdOrdine`)

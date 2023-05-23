@@ -1,7 +1,12 @@
+-- Manca l'assertion che lo sconto sia
+-- compreso tra 0 e 1
+
 CREATE TABLE `primo-sito-web`.`PRODOTTO_FORNITORE` (
 `IdProdotto` int NOT NULL,
 `IdFornitore` int NOT NULL,
-`Prezzo` int NOT NULL,
+`Prezzo` DECIMAL(10,2) NOT NULL,
+`Sconto` DECIMAL(3,2) DEFAULT 0 NOT NULL,
+
 PRIMARY KEY (`IdProdotto`,`IdFornitore`),
 
 CONSTRAINT FOREIGN KEY (`IdProdotto`) 

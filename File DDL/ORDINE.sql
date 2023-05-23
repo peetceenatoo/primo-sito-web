@@ -3,7 +3,7 @@ CREATE TABLE `primo-sito-web`.`ORDINE` (
 `TotaleOrdine` int NOT NULL,
 `IdFornitore` int NOT NULL,
 `SpeseSpedizione` int NOT NULL,
-`Indirizzo` varchar(45) NOT NULL,
+`Indirizzo` varchar(200) NOT NULL,
 `Email` varchar(45) NOT NULL,
 PRIMARY KEY (`Id`),
 
