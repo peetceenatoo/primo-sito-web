@@ -93,7 +93,7 @@ public class DAO_Prodotto{
         ResultSet resultSet = statement.executeQuery();
 
         // sposto il puntatore alla prima riga e ritorno il prezzo senza controllare
-        // perchè resultSet.getInt ritorna 0 se il puntatore non punta ad una riga
+        // perchè resultSet.getInt lancia SQLException se il puntatore non punta ad una riga
         resultSet.next();
         return resultSet.getDouble("Prezzo");
     }
@@ -113,7 +113,7 @@ public class DAO_Prodotto{
         ResultSet resultSet = statement.executeQuery();
 
         // sposto il puntatore alla prima riga e ritorno il prezzo senza controllare
-        // perchè resultSet.getDouble ritorna 0 se il puntatore non punta ad una riga
+        // perchè resultSet.getDouble lancia SQLException se il puntatore non punta ad una riga
         resultSet.next();
         return resultSet.getDouble("Sconto");
     }
@@ -150,7 +150,7 @@ public class DAO_Prodotto{
         ResultSet resultSet = statement.executeQuery();
 
         // sposto il puntatore alla prima riga e ritorno il prezzo senza controllare
-        // perchè resultSet.getString ritorna null se il puntatore non punta ad una riga
+        // perchè resultSet.getString lancia SQLException se il puntatore non punta ad una riga
         resultSet.next();
         return resultSet.getString("Foto");
     }
