@@ -1,5 +1,5 @@
 package it.polimi.tiw.Bean;
 
-public record DettaglioOrdine(int idProdotto, int idFornitore, int idOrdine, int quantita, double prezzo) {
+public record DettaglioOrdine(int id, int idOrdine, int idProdotto, double prezzoProdotto, int quantita) {
 	
 }

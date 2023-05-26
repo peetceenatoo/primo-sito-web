@@ -27,10 +27,8 @@ public class DAO_Prodotto{
 
         // pre-compila la query se sintatticamente corretta
         PreparedStatement statement = connessione.prepareStatement(query);
-        
-        // imposto il valore idProdotto come parametro #1 della query
+        // imposto il parametro della query
         statement.setInt(1, idProdotto);
-        
         // eseguo la query
         ResultSet resultSet = statement.executeQuery();
 
@@ -44,14 +42,13 @@ public class DAO_Prodotto{
     	List<Prodotto> ultimi;
     	
     	// per selezionare solo gli ultimi 5, ordino in base al timestamp e metto limit 5
+    	// questa query assume che siano salvate tutte le visualizzazioni dei prodotti e non solo l'ultima
         String query = "SELECT P.*, Timestamp FROM VISUALIZZAZIONE v1 INNER JOIN PRODOTTO P ON P.Id = v1.IdProdotto WHERE Timestamp = (SELECT MAX(Timestamp) FROM VISUALIZZAZIONE v2 WHERE P.Id IN (SELECT IdProdotto FROM PRODOTTO_FORNITORE) AND v2.Email = ? AND v2.IdProdotto = v1.IdProdotto) ORDER BY Timestamp DESC LIMIT 5;";
         
         // pre-compila la query se sintatticamente corretta
         PreparedStatement statement = connessione.prepareStatement(query);
-        
-        // imposto il valore email come parametro #1 della query
+        // imposto il parametro della query
         statement.setString(1, email);
-        
         // eseguo la query
         ResultSet resultSet = statement.executeQuery();
         
@@ -72,7 +69,6 @@ public class DAO_Prodotto{
 	                ultimi.add(cinqueDefault.poll());
 	        }
         }
-        
         // ritorno il risultato
 	    return ultimi;
     }
@@ -84,11 +80,9 @@ public class DAO_Prodotto{
         
         // pre-compila la query se sintatticamente corretta
         PreparedStatement statement = connessione.prepareStatement(query);
-
-        // imposto come parametri i rispettivi Id
+        // imposto i parametri della query
         statement.setInt(1, idProdotto);
         statement.setInt(2, idFornitore);
-
         // eseguo la query
         ResultSet resultSet = statement.executeQuery();
 
@@ -104,11 +98,9 @@ public class DAO_Prodotto{
         
         // pre-compila la query se sintatticamente corretta
         PreparedStatement statement = connessione.prepareStatement(query);
-
-        // imposto come parametri i rispettivi Id
+        // imposto i parametri della query
         statement.setInt(1, idProdotto);
         statement.setInt(2, idFornitore);
-
         // eseguo la query
         ResultSet resultSet = statement.executeQuery();
 
@@ -124,11 +116,9 @@ public class DAO_Prodotto{
         
         // pre-compila la query se sintatticamente corretta
         PreparedStatement statement = connessione.prepareStatement(query);
-
-        // imposto come parametri i rispettivi Id
+        // imposto i parametri della query
         statement.setInt(1, idProdotto);
         statement.setInt(2, idFornitore);
-
         // eseguo la query
         ResultSet resultSet = statement.executeQuery();
 
@@ -142,10 +132,8 @@ public class DAO_Prodotto{
         
         // pre-compila la query se sintatticamente corretta
         PreparedStatement statement = connessione.prepareStatement(query);
-        
-        // imposto idProdotto come parametro #1 della query
+        // imposto il parametro della query
         statement.setInt(1, idProdotto);
-        
         // eseguo la query
         ResultSet resultSet = statement.executeQuery();
 
@@ -155,43 +143,39 @@ public class DAO_Prodotto{
         return resultSet.getString("Foto");
     }
     
-    public Map<Prodotto, Integer> getProdotti(String parolaChiave) throws SQLException {
-    	Map<Prodotto, Integer> prodotti;
+    public Map<Prodotto, Double> getProdotti(String parolaChiave) throws SQLException {
+    	Map<Prodotto, Double> prodotti;
     	
     	// cerco, tra tutti i prodotti quelli che hanno il nome o la descrizione come specificato in seguito, quelli forniti a prezzo minimo
-    	String query = "SELECT P.*, Min(Round((Prezzo*(1-Sconto)))) AS PrezzoMinimo FROM PRODOTTO P INNER JOIN PRODOTTO_FORNITORE PDF on P.Id = PDF.IdProdotto WHERE P.Nome LIKE ? OR P.Descrizione LIKE ? GROUP BY IdProdotto ORDER BY PrezzoMinimo;";
-        
-    	// istanzio la lista da ritornare
-    	prodotti = new HashMap<>();
+    	String query = "SELECT P.*, Min(Round((Prezzo*(1-Sconto))),2) AS PrezzoMinimo FROM PRODOTTO P INNER JOIN PRODOTTO_FORNITORE PDF on P.Id = PDF.IdProdotto WHERE P.Nome LIKE ? OR P.Descrizione LIKE ? GROUP BY IdProdotto ORDER BY PrezzoMinimo;";
     	
     	// pre-compila la query se sintatticamente corretta
         PreparedStatement statement = connessione.prepareStatement(query);
-
-    	// imposto come parametri una stringa generica che contenga la parola chiave
+    	// imposto i parametri della query come stringhe generiche che contengono la parola chiave
         statement.setString(1, "%" + parolaChiave + "%");
         statement.setString(2, "%" + parolaChiave + "%");
-
         // eseguo la query
         ResultSet resultSet = statement.executeQuery();
+        
+        // istanzio la lista da ritornare
+    	prodotti = new HashMap<>();
 
         // metto i risultati nella lista e ritorno
         while( resultSet.next() )
-            prodotti.put(new Prodotto(resultSet.getInt("Codice"), resultSet.getString("Nome"), resultSet.getString("Descrizione"), resultSet.getString("Foto"), resultSet.getString("Categoria")), resultSet.getInt("PrezzoMinimo"));
+            prodotti.put(new Prodotto(resultSet.getInt("Id"), resultSet.getString("Nome"), resultSet.getString("Descrizione"), resultSet.getString("Foto"), resultSet.getString("Categoria")), resultSet.getDouble("PrezzoMinimo"));
         return prodotti;
     }
     
     public void setVisualizzato(Utente utente, int idProdotto) throws SQLException {
     	// inserisco una nuova riga di visualizzazione
+    	// assumo di non voler dimenticare le visualizzazioni precedenti, quindi non le elimino
         String query = "INSERT INTO VISUALIZZAZIONE (Email, IdProdotto) VALUES(?, ?)";
         
         // pre-compila la query se sintatticamente corretta
         PreparedStatement statement = connessione.prepareStatement(query);
-        
-        // imposto la mail dell'utente dato come parametro #1
+        // imposto i parametri della query
         statement.setString(1, utente.email());
-        // imposto idProdotto come parametro #2
         statement.setInt(2, idProdotto);
-        
         // eseguo la query
         statement.executeUpdate();
     }
@@ -221,11 +205,9 @@ public class DAO_Prodotto{
         
         // pre-compila la query se sintatticamente corretta
         PreparedStatement statement = connessione.prepareStatement(query);
-
         // imposto gli Id da escludere come parametri della query
         for( int i=1; i<=daEscludere.size(); i++ )
             statement.setInt(i, daEscludere.get(i).id());
-        
         // eseguo la query
         ResultSet resultSet = statement.executeQuery();
 

@@ -1,12 +1,10 @@
 package it.polimi.tiw.DAO;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpSession;
-import it.polimi.tiw.Bean.ResocontoDelFornitore;
 
 public class DAO_Carrello {
 
@@ -84,38 +82,6 @@ public class DAO_Carrello {
         
         // tolgo il fornitore
         carrello.remove(idFornitore);
-    }
-    
-    public ResocontoDelFornitore getResocontoDelFornitore(int idFornitore) throws SQLException {
-    	DAO_Prodotto daoProdotto = new DAO_Prodotto(connessione);
-    	Map<Integer, Map<Integer, Integer>> carrello;
-    	int num;
-    	double tot;
-        
-    	// se già presente nella sessione, prendo il carrello
-        carrello = (Map<Integer, Map<Integer, Integer>>) sessione.getAttribute("carrello");
-        
-        // altrimenti lo creo
-        if( carrello == null ){
-            carrello = new HashMap<>();
-            sessione.setAttribute("carrello", carrello);
-        }
-        
-        // inizializzo i contatori
-        num = 0;
-        tot = 0;
-
-        // se esistono prodotti per il fornitore, li conto in num e sommo il loro costo in tot
-        if( carrello.containsKey(idFornitore) ) {
-	        for( Map.Entry<Integer, Integer> e : carrello.get(idFornitore).entrySet() ){
-	            num += e.getValue();
-	            tot += daoProdotto.getPrezzo(e.getKey(), idFornitore) * e.getValue();
-	        }
-        }
-
-        // ritorno il resoconto
-        return new ResocontoDelFornitore(num,tot);
-
     }
   
 }
