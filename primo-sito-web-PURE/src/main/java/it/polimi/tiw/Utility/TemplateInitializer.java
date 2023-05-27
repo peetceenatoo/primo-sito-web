@@ -1,4 +1,4 @@
-package it.polimi.tiw.Utilities;                                                            
+package it.polimi.tiw.Utility;                                                            
                                                                                                           
 import org.thymeleaf.TemplateEngine;                                                                      
 import org.thymeleaf.templatemode.TemplateMode;                                                           

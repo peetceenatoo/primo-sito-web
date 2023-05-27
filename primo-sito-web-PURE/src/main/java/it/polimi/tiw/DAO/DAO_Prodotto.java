@@ -38,7 +38,7 @@ public class DAO_Prodotto{
         return null;
     }
     
-    public List<Prodotto> getUltimiCinqueVisualizzati(String email) throws SQLException {
+    public List<Prodotto> getCinqueProdottiHome(String email) throws SQLException {
     	List<Prodotto> ultimi;
     	
     	// per selezionare solo gli ultimi 5, ordino in base al timestamp e metto limit 5
@@ -61,7 +61,7 @@ public class DAO_Prodotto{
         
         // se non ce n'erano almeno 5, ne prendo altri a caso tramite il metodo apposito
         if( ultimi.size() < 5 ) {
-            Queue<Prodotto> cinqueDefault = getCinqueDiDefault(ultimi);
+            Queue<Prodotto> cinqueDefault = getCinqueDefault(ultimi);
            
 	        // finchè non arrivo a 5 aggiungo prodotti da quelli di default
 	        while( !cinqueDefault.isEmpty() && ( ultimi.size() < 5 ) ){
@@ -73,6 +73,43 @@ public class DAO_Prodotto{
 	    return ultimi;
     }
     
+    private Queue<Prodotto> getCinqueDefault(List<Prodotto> daEscludere) throws SQLException {
+    	Queue<Prodotto> ultimi;
+    	
+    	// assumo che la categoria di default sia 'Tecnologia'
+        String query = "SELECT * FROM PRODOTTO P WHERE P.Categoria = 'Tecnologia' AND P.Id IN (SELECT IdProdotto FROM PRODOTTO_FORNITORE WHERE Sconto > 0.00)";
+        
+        // escludo eventuali prodotti da escludere aggiungendo condizioni sui rispettivi Id alla query
+        if( !daEscludere.isEmpty() ){
+            query += " AND P.Id NOT IN (";
+                for( int i=0; i<daEscludere.size(); i++ ){
+                    query += " ? ";
+                    if( i != daEscludere.size()-1 )
+                    	query += ", ";
+                }
+            query += " ) ";
+        }
+        
+        // disordino il risultato e prendo solo 5 righe
+        query += " ORDER BY RAND() LIMIT 5";
+
+        // istanzio la lista da ritornare
+        ultimi = new LinkedList<>();
+        
+        // pre-compila la query se sintatticamente corretta
+        PreparedStatement statement = connessione.prepareStatement(query);
+        // imposto gli Id da escludere come parametri della query
+        for( int i=1; i<=daEscludere.size(); i++ )
+            statement.setInt(i, daEscludere.get(i).id());
+        // eseguo la query
+        ResultSet resultSet = statement.executeQuery();
+
+        // aggiungo gli elementi alla coda e ritorno il risultato
+        while( resultSet.next() )
+            ultimi.add( new Prodotto(resultSet.getInt("Id"), resultSet.getString("Nome"), resultSet.getString("Descrizione"), resultSet.getString("Foto"), resultSet.getString("Categoria")) );
+        return ultimi;
+    }
+	
     public double getPrezzo(int idProdotto, int idFornitore) throws SQLException {
 
     	// calcolo il prezzo già scontato
@@ -180,41 +217,4 @@ public class DAO_Prodotto{
         statement.executeUpdate();
     }
      
-    private Queue<Prodotto> getCinqueDiDefault(List<Prodotto> daEscludere) throws SQLException {
-    	Queue<Prodotto> ultimi;
-    	
-    	// assumo che la categoria di default sia 'Tecnologia'
-        String query = "SELECT * FROM PRODOTTO P WHERE P.Categoria = 'Tecnologia' AND P.Id IN (SELECT IdProdotto FROM PRODOTTO_FORNITORE WHERE Sconto > 0.00)";
-        
-        // escludo eventuali prodotti da escludere aggiungendo condizioni sui rispettivi Id alla query
-        if( !daEscludere.isEmpty() ){
-            query += " AND P.Id NOT IN (";
-                for( int i=0; i<daEscludere.size(); i++ ){
-                    query += " ? ";
-                    if( i != daEscludere.size()-1 )
-                    	query += ", ";
-                }
-            query += " ) ";
-        }
-        
-        // disordino il risultato e prendo solo 5 righe
-        query += " ORDER BY RAND() LIMIT 5";
-
-        // istanzio la lista da ritornare
-        ultimi = new LinkedList<>();
-        
-        // pre-compila la query se sintatticamente corretta
-        PreparedStatement statement = connessione.prepareStatement(query);
-        // imposto gli Id da escludere come parametri della query
-        for( int i=1; i<=daEscludere.size(); i++ )
-            statement.setInt(i, daEscludere.get(i).id());
-        // eseguo la query
-        ResultSet resultSet = statement.executeQuery();
-
-        // aggiungo gli elementi alla coda e ritorno il risultato
-        while( resultSet.next() )
-            ultimi.add( new Prodotto(resultSet.getInt("Id"), resultSet.getString("Nome"), resultSet.getString("Descrizione"), resultSet.getString("Foto"), resultSet.getString("Categoria")) );
-        return ultimi;
-    }
-	
 }

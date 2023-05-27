@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Home</title>
+        <link rel="stylesheet" type="text/css" media="all"
+              href="../css/stylesheet.css" th:href="@{/css/stylesheet.css}" />
+    </head>
+    <body>
+
+    <div th:insert="@{fragments/fragments.html} :: navbar"></div>
+
+    <div class="searchForm">
+        <form action="#" th:action="@{/results}" method="GET">
+            <input type="text" placeholder="Cerca..." name="queryString" required />
+        </form>
+    </div>
+
+    <h2 th:if="${prodotti.isEmpty()}">Nessun prodotto nel DB</h2>
+    <h2 th:if="${!prodotti.isEmpty()}">Hai visto di recente (o potrebbe interessarti):</h2>
+    <br/>
+    <div class="card-container">
+        <div class="card" style="width: 18rem;" th:if="${!prodotti.isEmpty()}" th:each="prod : ${prodotti}">
+            <img th:src="@{${prod.foto}}" class="card-img-top"/>
+            <div class="card-body">
+                <p th:text="${'Nome Prodotto: ' + prod.nome()}"></p>
+            </div>
+        </div>
+    </div>
+
+    </body>
+</html>
