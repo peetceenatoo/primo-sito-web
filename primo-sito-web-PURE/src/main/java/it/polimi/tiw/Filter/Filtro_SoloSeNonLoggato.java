@@ -20,7 +20,7 @@ public class Filtro_SoloSeNonLoggato implements Filter {
             // se la sessione per l'utente è attiva, impedisco di andare alla pagina di login
             if( !sessione.isNew() && ( sessione.getAttribute("utente") != null ) )
                 ((HttpServletResponse) risposta).sendRedirect(richiestaHTTP.getContextPath() + "/home");
-            // altrimenti proseguo
+            // altrimenti mando alla servlet
             else
                 chain.doFilter(richiesta, risposta);
         }

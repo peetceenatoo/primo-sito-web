@@ -10,7 +10,7 @@
     </head>
     <body>
 
-    <div th:insert="@{fragments/fragments.html} :: navbar"></div>
+    <div th:insert="@{menu.html} :: navbar"></div>
 
     <div class="searchForm">
         <form action="#" th:action="@{/results}" method="GET">
@@ -23,7 +23,7 @@
     <br/>
     <div class="card-container">
         <div class="card" style="width: 18rem;" th:if="${!prodotti.isEmpty()}" th:each="prod : ${prodotti}">
-            <img th:src="@{${prod.foto}}" class="card-img-top"/>
+            <img th:src="@{${#context.getParameter('percorsoImmagini')}+ ${prod.foto}}" class="card-img-top"/>
             <div class="card-body">
                 <p th:text="${'Nome Prodotto: ' + prod.nome()}"></p>
             </div>

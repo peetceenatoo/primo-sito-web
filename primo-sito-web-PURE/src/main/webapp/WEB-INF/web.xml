@@ -20,8 +20,12 @@
     </context-param>
 
     <context-param>
-        <param-name>imagesPath</param-name>
+        <param-name>percorsoImmagini</param-name>
         <param-value>C:\\Users\\picci\\OneDrive\\Desktop\\Uni\\Terzo anno\\Secondo semestre\\Tecnologie per il web\\Progetto\\img\\</param-value>
     </context-param>
+    
+    <welcome-file-list>
+  		<welcome-file>login.html</welcome-file>
+	</welcome-file-list>
 
 </web-app>

@@ -65,9 +65,10 @@ public class Home extends HttpServlet {
         // aggiungo dinamicamente i prodotti alla pagina home
         ctx.setVariable("prodotti", daVisualizzare);
 
-        // determino la codifica
+        // imposto la codifica
         risposta.setCharacterEncoding("UTF-8");
 
+        // mando la risposta al client
         try {
         	this.templateEngine.process("home", ctx, risposta.getWriter());
         } catch (Throwable e) {
