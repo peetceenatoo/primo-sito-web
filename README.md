@@ -1,4 +1,4 @@
-# Progetto di reti logiche
+# Progetto di TIW
 
 Anno accademico 2022-2023<br>
 
