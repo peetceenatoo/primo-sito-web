@@ -16,5 +16,9 @@
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/mysql-connector-j-8.0.32.jar"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/thymeleaf-3.1.1.RELEASE.jar"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/slf4j-api-2.0.7.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/attoparser-2.0.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/ognl-3.3.4.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/unbescape-1.1.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/javassist-3.29.0-GA.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
