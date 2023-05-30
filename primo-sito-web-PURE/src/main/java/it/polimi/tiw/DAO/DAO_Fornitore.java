@@ -76,8 +76,8 @@ public class DAO_Fornitore {
         return fasceDiSpedizione;
 	}
 	
-	public Map<Fornitore, Integer> getFornitori(int idProduct) throws SQLException {
-		Map<Fornitore, Integer> fornitori;
+	public Map<Fornitore, Double> getFornitori(int idProduct) throws SQLException {
+		Map<Fornitore, Double> fornitori;
 		
 		// prendo fornitore e prezzo relativo per il prodotto richiesto
         String query = "SELECT F.*, Round((Prezzo*(1-Sconto)),2) as Prezzo FROM PRODOTTO_FORNITORE PDF INNER JOIN FORNITORE F ON PDF.IdFornitore = F.Id WHERE IdProdotto = ?";
@@ -101,7 +101,7 @@ public class DAO_Fornitore {
                 sogliaSpedizione = null;
 
             // aggiungo fornitore e prezzo alla mappa
-            fornitori.put(new Fornitore(resultSet.getInt("Id"), resultSet.getString("Nome"), resultSet.getDouble("Valutazione"), sogliaSpedizione, this.getFasceDiSpedizione(resultSet.getInt("Id"))), resultSet.getInt("Prezzo"));
+            fornitori.put(new Fornitore(resultSet.getInt("Id"), resultSet.getString("Nome"), resultSet.getDouble("Valutazione"), sogliaSpedizione, this.getFasceDiSpedizione(resultSet.getInt("Id"))), resultSet.getDouble("Prezzo"));
         }
         // ritorno il risultato
         return fornitori;
