@@ -45,7 +45,7 @@ public class Image extends HttpServlet {
         try{
         	idProdotto = Integer.parseInt(richiesta.getParameter("idProdotto"));
         } catch (NumberFormatException e) {
-        	risposta.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parametro Id prodotto mal formato.");
+        	risposta.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parametro Id Prodotto mal formato.");
         	return;
         }
 
