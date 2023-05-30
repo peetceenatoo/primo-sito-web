@@ -180,7 +180,7 @@ public class DAO_Prodotto{
         return resultSet.getString("Foto");
     }
     
-    public Map<Prodotto, Double> getProdotti(String parolaChiave) throws SQLException {
+    public Map<Prodotto, Double> getProdotti(String queryString) throws SQLException {
     	Map<Prodotto, Double> prodotti;
     	
     	// cerco, tra tutti i prodotti quelli che hanno il nome o la descrizione come specificato in seguito, quelli forniti a prezzo minimo
@@ -189,8 +189,8 @@ public class DAO_Prodotto{
     	// pre-compila la query se sintatticamente corretta
         PreparedStatement statement = connessione.prepareStatement(query);
     	// imposto i parametri della query come stringhe generiche che contengono la parola chiave
-        statement.setString(1, "%" + parolaChiave + "%");
-        statement.setString(2, "%" + parolaChiave + "%");
+        statement.setString(1, "%" + queryString + "%");
+        statement.setString(2, "%" + queryString + "%");
         // eseguo la query
         ResultSet resultSet = statement.executeQuery();
         
