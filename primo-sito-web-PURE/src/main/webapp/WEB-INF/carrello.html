@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Carrello</title>
+        <link rel="stylesheet" type="text/css" media="all"
+              href="../css/stylesheet.css" th:href="@{/css/stylesheet.css}" />
+
+    </head>
+    <body>
+
+    <div th:insert="@{menu/menu.html} :: navbar"></div>
+
+
+    <div>
+        <h2>Carrello</h2>
+        <p th:if="${carrello.isEmpty()}">Nessun prodotto nel carrello</p>
+
+        <ul class="listview" th:if="${!carrello.isEmpty()}">
+            <li class="listview-row" th:each=" entryCarrello : ${carrello.entrySet()}" th:if="${entryCarrello.getValue() != null && !entryCarrello.getValue().isEmpty()}" th:with=" fornitore = ${DAOfornitore.getFornitore(entryCarrello.getKey())}">
+
+                <div class="order-heading">
+                    <h3 th:text="${fornitore.getNome()}"></h3>
+                    <form th:action="@{/ordini}" method="POST">
+                        <input type="submit" value="Ordina"/>
+                        <input type="hidden" name="idFornitore" th:value="${fornitore.id}"/>
+                    </form>
+                </div>
+                <br/>
+                <table class="order-table">
+                    <thead>
+                        <tr>
+                            <th>Prodotto</th>
+                            <th>Immagine</th>
+                            <th>Quantità</th>
+                            <th>Prezzo Unitario</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each=" entryProdotto : ${entryCarrello.getValue().entrySet()}" th:with=" prodotto = ${DAOprodotto.getProdotto(entryProdotto.getKey())}">
+                            <td th:text="${prodotto.nome()}"></td>
+                            <td><img th:src="@{${'/immagine?idProdotto=' + prodotto.id}}"/></td>
+                            <td th:text="${entryProdotto.getValue()}"></td>
+                            <td th:text="${#numbers.formatDecimal(DAOprodotto.getPrezzo(prodotto.id,fornitore.id) / 100.00,1,'COMMA',2,'POINT') + ' €'}"></td>
+
+                        </tr>
+                    </tbody>
+
+                </table>
+
+
+            </li>
+        </ul>
+
+    </div>
+
+
+    </body>
+</html>
