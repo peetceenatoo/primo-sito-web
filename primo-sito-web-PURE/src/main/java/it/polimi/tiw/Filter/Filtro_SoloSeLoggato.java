@@ -13,7 +13,7 @@ public class Filtro_SoloSeLoggato implements Filter {
 
     @Override
     public void doFilter(ServletRequest richiesta, ServletResponse risposta, FilterChain chain) throws IOException, ServletException {
-        // faccio il cast della richiesta prendo la sessione
+        // faccio il cast della richiesta e prendo la sessione
     	HttpServletRequest richiestaHTTP = (HttpServletRequest) richiesta;
         HttpSession sessione = richiestaHTTP.getSession();
         

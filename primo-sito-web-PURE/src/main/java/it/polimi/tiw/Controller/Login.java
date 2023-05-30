@@ -81,9 +81,7 @@ public class Login extends HttpServlet {
             	// controllo le credenziali
                 utente = dao.getUtenteConPassword(email, password);
         } catch (SQLException e) {
-            e.printStackTrace();
-            // rispondo al client con un messaggio di errore
-            risposta.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error while checking credentials");
+            risposta.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore durante il controllo delle credenziali.");
             return;
         }
         

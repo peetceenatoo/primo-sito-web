@@ -55,11 +55,7 @@ public class Home extends HttpServlet {
         try {
             daVisualizzare = dao.getCinqueProdottiHome(utente.email());
         } catch (SQLException e) {
-        	// stampo nella console del server l'eccezione
-            e.printStackTrace();
-            // rispondo al client con un messaggio di errore
             risposta.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore nella selezione dei prodotti da visualizzare.");
-            // e termino l'esecuzione
             return;
         }
         // aggiungo dinamicamente i prodotti alla pagina home
@@ -68,14 +64,12 @@ public class Home extends HttpServlet {
         // imposto la codifica
         risposta.setCharacterEncoding("UTF-8");
 
-        // mando la risposta al client
+        // mando la risposta al client (catcho un throwable perchè non conosco il codice sorgente di thymeleaf...
         try {
         	this.templateEngine.process("home", ctx, risposta.getWriter());
         } catch (Throwable e) {
-        	// stampo nella console del server l'eccezione
-            e.printStackTrace();
-            // rispondo al client con un messaggio di errore
         	risposta.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "É stato rilevato un comportamento indesiderato durante l'elaborazione di Thymeleaf della pagina.");
+        	return;
         }
 
     }
