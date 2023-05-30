@@ -10,13 +10,7 @@
     </head>
     <body>
 
-    <div th:insert="@{menu/menu.html} :: navbar"></div>
-
-    <div class="searchForm">
-        <form action="#" th:action="@{/results}" method="GET">
-            <input type="text" placeholder="Cerca..." name="queryString" required />
-        </form>
-    </div>
+    <div th:insert="@{menu/menuHome.html} :: navbar"></div>
 
     <h2 th:if="${prodotti.isEmpty()}">Nessun prodotto nel DB</h2>
     <h2 th:if="${!prodotti.isEmpty()}">Hai visto di recente (o potrebbe interessarti):</h2>
@@ -25,7 +19,7 @@
         <div class="card" style="width: 18rem;" th:if="${!prodotti.isEmpty()}" th:each="prod : ${prodotti}">
             <img th:src="@{${'/immagine?idProdotto=' + prod.id}}" class="card-img-top"/>
             <div class="card-body">
-                <p th:text="${'Nome Prodotto: ' + prod.nome()}"></p>
+                <p th:text="${'Nome Prodotto: ' + prod.nome()}" class="card-text"></p>
             </div>
         </div>
     </div>

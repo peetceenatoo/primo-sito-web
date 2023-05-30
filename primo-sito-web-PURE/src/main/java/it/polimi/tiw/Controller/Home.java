@@ -41,10 +41,10 @@ public class Home extends HttpServlet {
     protected void doGet(HttpServletRequest richiesta, HttpServletResponse risposta) throws IOException{
         List<Prodotto> daVisualizzare;
         
-    	// contiene l'informazione necessaria sul corrente scambio richiesta-risposta
+        // contiene l'informazione necessaria a thymeleaf sul corrente scambio richiesta-risposta// contiene l'informazione necessaria a thymeleaf sul corrente scambio richiesta-risposta
         final WebContext ctx = new WebContext(this.applicazione.buildExchange(richiesta, risposta), richiesta.getLocale());
 
-        // se esiste, prendo la sessione
+        // prendo la sessione
         HttpSession sessione = richiesta.getSession(false);
         Utente utente = (Utente) sessione.getAttribute("utente");
         

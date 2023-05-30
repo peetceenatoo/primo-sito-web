@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <body>
+        <div th:fragment="navbar" class="navbar">
+                <a th:href="@{/home}">Home</a>
+                <a th:href="@{/ordini}">Ordini</a>
+                <a th:href="@{/carrello}">Carrello</a>
+   				<div class="searchForm">
+			        <form action="#" th:action="@{/risultati}" method="GET">
+			            <input type="text" placeholder="Cerca..." name="queryString" required />
+			        </form>
+		    	</div>   
+                <form th:action="@{/logout}"  method="POST">
+                    <input type="submit" value="Log out">
+                </form>
+        </div>
+
+    </body>
+
+</html>
