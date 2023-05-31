@@ -43,7 +43,7 @@
                             <td th:text="${prodotto.nome()}"></td>
                             <td><img th:src="@{${'/immagine?idProdotto=' + prodotto.id}}"/></td>
                             <td th:text="${entryProdotto.getValue()}"></td>
-                            <td th:text="${#numbers.formatDecimal(DAOprodotto.getPrezzo(prodotto.id,fornitore.id), 1, 'COMMA', 2, 'POINT') + ' €'}"></td>
+                            <td th:text="${#numbers.formatDecimal(DAOprodotto.getPrezzoScontato(prodotto.id,fornitore.id), 1, 'COMMA', 2, 'POINT') + ' €'}"></td>
 
                         </tr>
                     </tbody>
