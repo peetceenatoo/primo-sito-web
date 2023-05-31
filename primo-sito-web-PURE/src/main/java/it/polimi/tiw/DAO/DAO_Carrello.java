@@ -1,10 +1,13 @@
 package it.polimi.tiw.DAO;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpSession;
+
+import it.polimi.tiw.Bean.Coppia;
 
 public class DAO_Carrello {
 
@@ -84,4 +87,24 @@ public class DAO_Carrello {
         carrello.remove(idFornitore);
     }
   
+    public Coppia<Integer, Double> getInfoFornitore(int idFornitore) throws SQLException{
+    	int num = 0, tot = 0;
+    	
+    	// creo un dao prodotto
+    	DAO_Prodotto daoProdotto = new DAO_Prodotto(connessione);
+    	// prendo il carrello
+        Map<Integer, Map<Integer, Integer>> carrello = getCarrello();
+
+        // se non ci sono prodotti del fornitore ritorno (0,0)
+        if( !carrello.containsKey(idFornitore) )
+        	return new Coppia<Integer, Double>(Integer.valueOf(0), Double.valueOf(0));
+
+        // calcolo num e tot
+        for( Map.Entry<Integer, Integer> en : carrello.get(idFornitore).entrySet() ){
+            num += en.getValue();
+            tot += daoProdotto.getPrezzo(en.getKey(), idFornitore) * en.getValue();
+        }
+        // ritorno il risultato
+        return new Coppia<Integer,Double>(Integer.valueOf(num),Double.valueOf(tot));
+    }
 }
