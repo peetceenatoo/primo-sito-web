@@ -184,7 +184,7 @@ public class DAO_Prodotto{
     	Map<Prodotto, Double> prodotti;
     	
     	// cerco, tra tutti i prodotti quelli che hanno il nome o la descrizione come specificato in seguito, quelli forniti a prezzo minimo
-    	String query = "SELECT P.*, Min(Round((Prezzo*(1-Sconto))),2) AS PrezzoMinimo FROM PRODOTTO P INNER JOIN PRODOTTO_FORNITORE PDF on P.Id = PDF.IdProdotto WHERE P.Nome LIKE ? OR P.Descrizione LIKE ? GROUP BY IdProdotto ORDER BY PrezzoMinimo;";
+    	String query = "SELECT P.*, Min(Round((Prezzo*(1-Sconto)),2)) AS Min FROM PRODOTTO P INNER JOIN PRODOTTO_FORNITORE PDF ON P.Id = PDF.IdProdotto WHERE P.Nome LIKE ? OR P.Descrizione LIKE ? GROUP BY P.Id ORDER BY Min;";
     	
     	// pre-compila la query se sintatticamente corretta
         PreparedStatement statement = connessione.prepareStatement(query);
@@ -199,7 +199,7 @@ public class DAO_Prodotto{
 
         // metto i risultati nella lista e ritorno
         while( resultSet.next() )
-            prodotti.put(new Prodotto(resultSet.getInt("Id"), resultSet.getString("Nome"), resultSet.getString("Descrizione"), resultSet.getString("Foto"), resultSet.getString("Categoria")), resultSet.getDouble("PrezzoMinimo"));
+            prodotti.put(new Prodotto(resultSet.getInt("Id"), resultSet.getString("Nome"), resultSet.getString("Descrizione"), resultSet.getString("Foto"), resultSet.getString("Categoria")), resultSet.getDouble("Min"));
         return prodotti;
     }
     
