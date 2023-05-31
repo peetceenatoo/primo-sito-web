@@ -109,7 +109,7 @@ public class DAO_Ordine{
                 throw new SQLException("Errore: l'operazione ha apportato modifiche ma non è possibile ottenere.");
 
             // query generica per inserire un dettaglio_prodotto
-            query = "INSERT INTO DETTAGLIO_PRODOTTO (IdOrdine, IdProdotto, PrezzoProdotto, Quantita) VALUES (?,?,?,?);";
+            query = "INSERT INTO DETTAGLIO_ORDINE (IdOrdine, IdProdotto, PrezzoProdotto, Quantita) VALUES (?,?,?,?);";
             // pre-compila la query se sintatticamente corretta
             PreparedStatement statement2 = connessione.prepareStatement(query);
             
