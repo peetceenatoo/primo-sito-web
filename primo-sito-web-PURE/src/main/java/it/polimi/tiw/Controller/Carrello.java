@@ -42,7 +42,7 @@ public class Carrello extends HttpServlet {
 
     	// prendo la sessione e quindi l'utente associato
         HttpSession sessione = richiesta.getSession(false);
-        Utente utente = (Utente)sessione.getAttribute("user");
+        Utente utente = (Utente)sessione.getAttribute("utente");
         
         // creo i dao necessari
         DAO_Prodotto daoProdotto = new DAO_Prodotto(connessione);
@@ -79,7 +79,7 @@ public class Carrello extends HttpServlet {
         // leggo i parametri della richiesta
         idFornitoreS = richiesta.getParameter("idFornitore");
         idProdottoS = richiesta.getParameter("idProdotto");
-        quantS = richiesta.getParameter("quant");
+        quantS = richiesta.getParameter("quantita");
 
         // se c'è stato un errore, lo visualizzo dinamicamente
         if( ( idFornitoreS == null ) || idFornitoreS.isEmpty() || ( idProdottoS == null ) || idProdottoS.isEmpty() || ( quantS == null ) || quantS.isEmpty()){
@@ -87,6 +87,7 @@ public class Carrello extends HttpServlet {
             return;
         }
 
+        // se fallisce la conversione a intero mando un messaggio di errore
         try{
             idFornitore = Integer.parseInt(idFornitoreS);
             idProdotto = Integer.parseInt(idProdottoS);
@@ -95,15 +96,18 @@ public class Carrello extends HttpServlet {
             risposta.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parametro mal formato.");
             return;
         }
-
+        
+        // se la quantità non è valida mando un messaggio di errore
         if( quant <= 0 ){
             risposta.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parametro quant non valido.");
             return;
         }
 
+        // creao un dao prodotto
         DAO_Prodotto daoProdotto = new DAO_Prodotto(connessione);
 
         try{
+        	// se il prodotto non è fornito da quel fornitore mando un messaggio di errore
             if( !daoProdotto.isFornitoDaFornitore(idProdotto,idFornitore) ){
             	risposta.sendError(HttpServletResponse.SC_BAD_REQUEST, "Il prodotto scelto come parametro non è fornito dal fornitore scelto come parametro.");
                 return;
@@ -113,9 +117,12 @@ public class Carrello extends HttpServlet {
             return;
         }
 
+        // creo un dao carrello
         DAO_Carrello daoCarrello = new DAO_Carrello(richiesta.getSession(false), this.connessione);
+        // aggiungo il prodotto al carrello
         daoCarrello.aggiungiProdottoAlCarrello(idProdotto, idFornitore, quant);
 
+        // mando il redirect al carrello
         percorso = getServletContext().getContextPath() + "/carrello";
         risposta.sendRedirect(percorso);
     }

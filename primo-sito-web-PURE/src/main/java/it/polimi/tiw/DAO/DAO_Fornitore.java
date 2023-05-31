@@ -76,7 +76,7 @@ public class DAO_Fornitore {
         return fasceDiSpedizione;
 	}
 	
-	public Map<Fornitore, Double> getFornitori(int idProduct) throws SQLException {
+	public Map<Fornitore, Double> getFornitori(int idProdotto) throws SQLException {
 		Map<Fornitore, Double> fornitori;
 		
 		// prendo fornitore e prezzo relativo per il prodotto richiesto
@@ -85,7 +85,7 @@ public class DAO_Fornitore {
         // pre-compila la query 1 se sintatticamente corretta
         PreparedStatement statement = connessione.prepareStatement(query);
         // imposto il parametro della query
-        statement.setInt(1, idProduct);
+        statement.setInt(1, idProdotto);
         // eseguo la query
         ResultSet resultSet = statement.executeQuery();
         
@@ -97,7 +97,7 @@ public class DAO_Fornitore {
         	
         	// gli attributi che possono essere null vanno trattati separatamente
             Integer sogliaSpedizione = resultSet.getInt("SogliaSpedizione");
-            if(resultSet.wasNull())
+            if( resultSet.wasNull() )
                 sogliaSpedizione = null;
 
             // aggiungo fornitore e prezzo alla mappa
