@@ -99,8 +99,8 @@ public class DAO_Prodotto{
         // pre-compila la query se sintatticamente corretta
         PreparedStatement statement = connessione.prepareStatement(query);
         // imposto gli Id da escludere come parametri della query
-        for( int i=1; i<=daEscludere.size(); i++ )
-            statement.setInt(i, daEscludere.get(i).id());
+        for( int i=0; i<daEscludere.size(); i++ )
+            statement.setInt(i+1, daEscludere.get(i).id());
         // eseguo la query
         ResultSet resultSet = statement.executeQuery();
 
