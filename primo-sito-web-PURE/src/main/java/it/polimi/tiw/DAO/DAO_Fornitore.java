@@ -36,7 +36,7 @@ public class DAO_Fornitore {
         if( !resultSet.next() ) return null;
 
         // gli attributi che possono essere null vanno trattati separatamente
-        sogliaSpedizione = resultSet.getDouble("SogliaSpedizione");
+        sogliaSpedizione = resultSet.getDouble("SogliaSpedizioneGratuita");
         if( resultSet.wasNull() )
             sogliaSpedizione = null;
         
@@ -48,7 +48,7 @@ public class DAO_Fornitore {
 		List<FasciaDiSpedizione> fasceDiSpedizione;
 		
 		// prendo le fasce di spedizione del fornitore
-		String query = "SELECT * FROM FASCIADISPEDIZIONE WHERE IdFornitore = ?";
+		String query = "SELECT * FROM FASCIASPEDIZIONE WHERE IdFornitore = ?";
 	
 		// pre-compila la query 1 se sintatticamente corretta
         PreparedStatement statement = connessione.prepareStatement(query);
@@ -80,7 +80,7 @@ public class DAO_Fornitore {
 		Map<Fornitore, Double> fornitori;
 		
 		// prendo fornitore e prezzo relativo per il prodotto richiesto
-        String query = "SELECT F.*, Round((Prezzo*(1-Sconto)),2) as Prezzo FROM PRODOTTO_FORNITORE PDF INNER JOIN FORNITORE F ON PDF.IdFornitore = F.Id WHERE IdProdotto = ?";
+        String query = "SELECT F.*, Round((Prezzo*(1-Sconto)),2) AS Prezzo FROM PRODOTTO_FORNITORE PDF INNER JOIN FORNITORE F ON PDF.IdFornitore = F.Id WHERE IdProdotto = ?";
         
         // pre-compila la query 1 se sintatticamente corretta
         PreparedStatement statement = connessione.prepareStatement(query);
@@ -96,7 +96,7 @@ public class DAO_Fornitore {
         while( resultSet.next() ){
         	
         	// gli attributi che possono essere null vanno trattati separatamente
-            Integer sogliaSpedizione = resultSet.getInt("SogliaSpedizione");
+            Integer sogliaSpedizione = resultSet.getInt("SogliaSpedizioneGratuita");
             if( resultSet.wasNull() )
                 sogliaSpedizione = null;
 
