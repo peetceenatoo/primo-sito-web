@@ -5,7 +5,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -13,7 +12,6 @@ import org.thymeleaf.web.servlet.JavaxServletWebApplication;
 
 import it.polimi.tiw.Bean.Fornitore;
 import it.polimi.tiw.Bean.Prodotto;
-import it.polimi.tiw.Bean.Utente;
 import it.polimi.tiw.DAO.DAO_Carrello;
 import it.polimi.tiw.DAO.DAO_Fornitore;
 import it.polimi.tiw.DAO.DAO_Prodotto;
@@ -86,10 +84,6 @@ public class Risultati extends HttpServlet {
 	            }
 	        }
 	    }
-
-        // prendo la sessione e quindi l'utente associato
-		HttpSession sessione = richiesta.getSession(false);
-        Utente utente = (Utente)sessione.getAttribute("utente");
         
         // creo un dao prodotto
         DAO_Prodotto daoProdotto = new DAO_Prodotto(connessione);

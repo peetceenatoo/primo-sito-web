@@ -65,7 +65,7 @@ public class Visualizza extends HttpServlet {
         // controllo che tutti gli id aperti siano validi
         try {
 	        if( aperti != null ){
-	            for(String s : aperti){
+	            for( String s : aperti ){
 	                Integer.parseInt(s);
 	            }
 	        }

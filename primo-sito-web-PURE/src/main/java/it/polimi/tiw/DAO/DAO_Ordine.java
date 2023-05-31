@@ -74,7 +74,7 @@ public class DAO_Ordine{
         return ordini;
     }
     
-    public void creaOrdine(Utente utente, String nomeFornitore, int speseSpedizione, int totaleOrdine, Map<ProdottoDiUnFornitore,Integer> quantitaProdotti) throws SQLException {
+    public void creaOrdine(Utente utente, String nomeFornitore, double speseSpedizione, double totaleOrdine, Map<ProdottoDiUnFornitore,Integer> quantitaProdotti) throws SQLException {
     	int id_ordine;
     	
     	// per far fallire tutto un blocco di operazioni e non solo quella patologica
@@ -128,13 +128,13 @@ public class DAO_Ordine{
 
             // se siamo arrivati qui, tutto è andato liscio: posso fare la commit
             connessione.commit();
-        
-        } catch (SQLException ex) {
+            
+        } catch (SQLException e) {
         	// se sono state lanciate eccezioni nel blocco, faccio il rollback (se la connessione non è null)
             if( connessione != null )
             	connessione.rollback();
             // lancio nuovamente la stessa eccezione
-            throw new SQLException(ex);
+            throw e;
             
         } finally {
         	// e ri-attivo l'autocommit

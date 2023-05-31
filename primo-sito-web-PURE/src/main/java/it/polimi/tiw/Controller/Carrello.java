@@ -70,7 +70,6 @@ public class Carrello extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest richiesta, HttpServletResponse risposta) throws IOException {
-    	String percorso;
     	String idFornitoreS, idProdottoS, quantS;
     	int idFornitore, idProdotto, quant;
     	
@@ -124,8 +123,7 @@ public class Carrello extends HttpServlet {
         daoCarrello.aggiungiProdottoAlCarrello(idProdotto, idFornitore, quant);
 
         // mando il redirect al carrello
-        percorso = getServletContext().getContextPath() + "/carrello";
-        risposta.sendRedirect(percorso);
+        risposta.sendRedirect(getServletContext().getContextPath() + "/carrello");
     }
 
     @Override

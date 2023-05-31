@@ -45,8 +45,7 @@ public class Home extends HttpServlet {
         final WebContext ctx = new WebContext(this.applicazione.buildExchange(richiesta, risposta), richiesta.getLocale());
 
         // prendo la sessione
-        HttpSession sessione = richiesta.getSession(false);
-        Utente utente = (Utente) sessione.getAttribute("utente");
+        Utente utente = (Utente)richiesta.getSession(false).getAttribute("utente");
         
         // creo un DAO_Prodotto
         DAO_Prodotto dao = new DAO_Prodotto(connessione);
