@@ -19,7 +19,7 @@
         <div class="card" style="width: 18rem;" th:if="${!prodotti.isEmpty()}" th:each="prod : ${prodotti}">
             <img th:src="@{${'/immagine?idProdotto=' + prod.id}}" class="card-img-top"/>
             <div class="card-body">
-                <p th:text="${'Nome Prodotto: ' + prod.nome()}" class="card-text"></p>
+                <p th:text="${prod.nome()}" class="card-text"></p>
             </div>
         </div>
     </div>
