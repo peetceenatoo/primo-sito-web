@@ -10,6 +10,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.web.servlet.JavaxServletWebApplication;
 
+import it.polimi.tiw.Bean.Coppia;
 import it.polimi.tiw.Bean.Fornitore;
 import it.polimi.tiw.Bean.Prodotto;
 import it.polimi.tiw.DAO.DAO_Carrello;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @WebServlet(value = "/risultati")
@@ -40,7 +42,7 @@ public class Risultati extends HttpServlet {
     protected void doGet(HttpServletRequest richiesta, HttpServletResponse risposta) throws IOException {
 		String[] aperti;
     	Map<Integer, Map<Fornitore, Double>> prodottiAperti;
-    	Map<Prodotto, Double> risultati;
+    	List<Coppia<Prodotto, Double>> risultati;
     	
     	// contiene l'informazione necessaria a thymeleaf sul corrente scambio richiesta-risposta
     	final WebContext ctx = new WebContext(this.applicazione.buildExchange(richiesta, risposta), richiesta.getLocale());
@@ -53,7 +55,7 @@ public class Risultati extends HttpServlet {
         
         // se la queryString è nulla o vuota rimando alla home
         if( ( queryString == null ) || queryString.isEmpty() ) {
-            risposta.sendRedirect(getServletContext().getContextPath() + "/home");
+        	risposta.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parametro queryString non può essere vuoto.");
             return;
         }
         
@@ -72,13 +74,13 @@ public class Risultati extends HttpServlet {
 	            // prendo l'id del prodotto aperto
 	        	try{
 	                idProdotto = Integer.parseInt(s);
-	            } catch (NumberFormatException ex) {
+	            } catch (NumberFormatException e) {
 	                risposta.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parametro Id Prodotto mal formato.");
 	                return;
 	            }
 	        	try {
 	        		prodottiAperti.put(idProdotto, daoFornitore.getFornitori(idProdotto));
-	        	} catch(SQLException ex) {
+	        	} catch(SQLException e) {
 	                risposta.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore nel recupero dei fornitori.");
 	                return;
 	            }
@@ -98,6 +100,14 @@ public class Risultati extends HttpServlet {
         if( risultati == null ){
             risposta.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore nella ricerca dei risultati.");
             return;
+        }
+        
+        // controllo che non ci siano prodotti aperti che non sono tra i risultati della pagina
+        for( Integer i : prodottiAperti.keySet() ){
+        	if( !( risultati.stream().filter( x -> { return x.primo().id() == i; } ).count() > 0 ) ) {
+        		risposta.sendError(HttpServletResponse.SC_BAD_REQUEST, "Prodotto aperto non tra i risultati.");
+        		return;
+        	}
         }
 
         // creo un dao carrello

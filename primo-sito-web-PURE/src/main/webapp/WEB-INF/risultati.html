@@ -19,18 +19,18 @@
             <h2 th:if="${!risultati.isEmpty()}">Risultati ricerca:</h2>
             <div class="risultati">
                 <ul class="listview">
-                    <li class="listview-row" th:if="${!risultati.isEmpty()}" th:each=" risultato : ${risultati.keySet()}">
-                        <form th:action="@{${prodottiAperti.keySet().contains(risultato.id) ? '/risultati' : '/visualizza'}}" th:method="${prodottiAperti.keySet().contains(risultato.id) ? 'GET' : 'POST'}">
+                    <li class="listview-row" th:if="${!risultati.isEmpty()}" th:each=" risultato : ${risultati}">
+                        <form th:action="@{${prodottiAperti.keySet().contains(risultato.primo.id) ? '/risultati' : '/visualizza'}}" th:method="${prodottiAperti.keySet().contains(risultato.primo.id) ? 'GET' : 'POST'}">
                             <input type="hidden" name="queryString" th:value="${queryString}" />
-                            <input type="hidden" name="aperto" th:each=" id : ${prodottiAperti.keySet()}" th:if="${!id.equals(risultato.id)}" th:value="${id}"/>
-                            <input type="hidden" name="visualizzato" th:value="${risultato.id}" />
-                            <input class="listview-row-title" type="submit" th:value="${risultato.id + ' - ' + risultato.nome + ': ' + #numbers.formatDecimal(risultati.get(risultato), 1, 'COMMA', 2, 'POINT') + ' €'}">
+                            <input type="hidden" name="aperto" th:each=" id : ${prodottiAperti.keySet()}" th:if="${!id.equals(risultato.primo.id)}" th:value="${id}"/>
+                            <input type="hidden" name="visualizzato" th:value="${risultato.primo.id}" th:if="${!prodottiAperti.keySet().contains(risultato.primo.id)}" />
+                            <input class="listview-row-title" type="submit" th:value="${risultato.primo.id + ' - ' + risultato.primo.nome + ': ' + #numbers.formatDecimal(risultato.secondo, 1, 'COMMA', 2, 'POINT') + ' €'}">
                         </form>
-                        <div th:if="${prodottiAperti.keySet().contains(risultato.id)}">
-                            <img th:src="@{${'/immagine?idProdotto=' + risultato.id}}" alt="Immagine"/>
-                            <p th:text="${'Nome: ' + risultato.nome}"></p>
-                            <p th:text="${'Descrizione: ' + risultato.descrizione}"></p>
-                            <p th:text="${'Categoria: ' + risultato.categoria}"></p>
+                        <div th:if="${prodottiAperti.keySet().contains(risultato.primo.id)}">
+                            <img th:src="@{${'/immagine?idProdotto=' + risultato.primo.id}}" alt="Immagine"/>
+                            <p th:text="${'Nome: ' + risultato.primo.nome}"></p>
+                            <p th:text="${'Descrizione: ' + risultato.primo.descrizione}"></p>
+                            <p th:text="${'Categoria: ' + risultato.primo.categoria}"></p>
 	                        <h3>Fornitori</h3>
 	                        <table>
 	                           <thead>
@@ -42,14 +42,15 @@
 	                                   <th>Fasce di Spese di Spedizione</th>
 	                                   <th>Soglia Spedizione Gratis</th>
 	                                   <th>Già nel carrello</th>
+	                                   <th></th>
 	                               </tr>
 	                           </thead>
 	                           <tbody>
-	                               <tr th:each="fornitore_prezzo : ${prodottiAperti.get(risultato.id)}">
+	                               <tr th:each="fornitore_prezzo : ${prodottiAperti.get(risultato.primo.id)}">
 	                                   <td th:text="${fornitore_prezzo.getKey().nome}"></td>
 	                                   <td th:text="${fornitore_prezzo.getKey().valutazione + ' / 5.0'}"></td>
 	                                   <td th:text="${#numbers.formatDecimal( fornitore_prezzo.getValue(), 1, 'COMMA', 2, 'POINT' ) + ' €'}"></td>
-	                                   <td th:text="${#numbers.formatPercent( DAOprodotto.getSconto(risultato.id, fornitore_prezzo.getKey().id), 1, 2 )}"></td>
+	                                   <td th:text="${#numbers.formatPercent( DAOprodotto.getSconto(risultato.primo.id, fornitore_prezzo.getKey().id), 1, 2 )}"></td>
 	                                   <td>
 	                                       <ul>
 	                                           <li th:each="fascia : ${fornitore_prezzo.getKey().fasceDiSpedizione}" th:text = "${fascia.max == null} ? ${'Da ' + fascia.min + ': ' + #numbers.formatDecimal(fascia.prezzo, 1, 'COMMA', 2, 'POINT')  + ' €'} : ${fascia.min + '-' + fascia.max + ' articoli: ' + #numbers.formatDecimal(fascia.prezzo, 1, 'COMMA', 2, 'POINT') + ' €'}"></li>
@@ -60,7 +61,7 @@
 	                                   <td>
 	                                       <form th:action="@{/carrello}" method="POST">
 	                                           <input type="number" min="0" value="0" name="quantita"/>
-	                                           <input type="hidden" th:value="${risultato.id}" name="idProdotto" />
+	                                           <input type="hidden" th:value="${risultato.primo.id}" name="idProdotto" />
 	                                           <input type="hidden" th:value="${fornitore_prezzo.getKey().id}" name="idFornitore" />
 	                                           <input type="submit" value="Aggiungi al carrello" />
 	                                        </form>

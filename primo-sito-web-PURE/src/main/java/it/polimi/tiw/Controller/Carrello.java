@@ -99,7 +99,19 @@ public class Carrello extends HttpServlet {
         
         // se la quantità non è valida mando un messaggio di errore
         if( quant <= 0 ){
-            risposta.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parametro quant non valido.");
+            risposta.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parametro quantita non valido.");
+            return;
+        }
+        
+        // se idFornitore non è valido mando un messaggio di errore
+        if( idFornitore <= 0 ){
+            risposta.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parametro idFornitore non valido.");
+            return;
+        }
+        
+        // se idProdotto non è valido mando un messaggio di errore
+        if( idProdotto <= 0 ){
+            risposta.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parametro idProdotto non valido.");
             return;
         }
 

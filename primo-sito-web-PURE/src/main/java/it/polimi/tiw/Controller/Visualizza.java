@@ -22,14 +22,10 @@ import java.sql.SQLException;
 public class Visualizza extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    private TemplateEngine templateEngine;
-    private JavaxServletWebApplication applicazione;
     private Connection connessione;
 
 
     public void init() throws UnavailableException {
-        this.applicazione = JavaxServletWebApplication.buildApplication(getServletContext());
-        this.templateEngine = TemplateInitializer.getTemplateEngine(this.applicazione);
         this.connessione = ConnectionInitializer.getConnection(getServletContext());
     }
 
@@ -61,6 +57,26 @@ public class Visualizza extends HttpServlet {
             risposta.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parametro Id Prodotto aperto mal formato.");
             return;
         }
+        
+        // controllo che l'id aperto sia valido
+        if( idVisualizzato < 0 ){
+            risposta.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parametro Id Prodotto non valido.");
+            return;
+        }
+        
+        // creo un dao prodotto
+        DAO_Prodotto daoProdotto = new DAO_Prodotto(connessione);
+        
+        // controllo che non ci siano prodotti aperti che non sono tra i risultati della pagina
+    	try {
+			if( !( daoProdotto.getProdotti(queryString).stream().filter( x -> { return x.primo().id() == idVisualizzato; } ).count() > 0 ) ) {
+				risposta.sendError(HttpServletResponse.SC_BAD_REQUEST, "Prodotto aperto non tra i risultati.");
+				return;
+			}
+		} catch (SQLException e) {
+			risposta.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore nel recupero dei risultati dal DB.");
+            return;
+		}
 
         // controllo che tutti gli id aperti siano validi
         try {
@@ -71,20 +87,12 @@ public class Visualizza extends HttpServlet {
 	        }
         } catch(NumberFormatException e) {
         	risposta.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parametro Id Prodotto mal formato tra gli aperti.");
-        }
-        
-        // controllo che l'id aperto sia valido
-        if( idVisualizzato < 0 ){
-            risposta.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parametro Id Prodotto non valido.");
-            return;
+        	return;
         }
 
         // prendo la sessione e quindi l'utente associato
         HttpSession session = richiesta.getSession(false);
         Utente utente = (Utente)session.getAttribute("utente");
-        
-        // creo un dao prodotto
-        DAO_Prodotto daoProdotto = new DAO_Prodotto(connessione);
 
         // aggiungo il prodotto aperto alla tabella delle visualizzazioni
         try{

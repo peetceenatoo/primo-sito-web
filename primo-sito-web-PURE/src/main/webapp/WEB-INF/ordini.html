@@ -28,8 +28,7 @@
                             <p th:if="${ordine.dataSpedizione() == null}" th:text="${'Ordine non ancora spedito.'}"></p>
 
                             <p th:text="${'Indirizzo di spedizione: ' + ordine.indirizzo()}"></p>
-
-                            <p th:text="${'Totale ordine: ' + #numbers.formatDecimal(ordine.totaleOrdine(), 1, 'COMMA', 2, 'POINT') + ' €'}"></p>
+                            <p th:text="${'Totale ordine (senza spese di spedizione): ' + #numbers.formatDecimal(ordine.totaleOrdine(), 1, 'COMMA', 2, 'POINT') + ' €'}"></p>
                             <p th:text="${'Spese di spedizione: ' + #numbers.formatDecimal(ordine.speseSpedizione(), 1, 'COMMA', 2, 'POINT') + ' €'}"></p>
 
                             <h3>Prodotti</h3>

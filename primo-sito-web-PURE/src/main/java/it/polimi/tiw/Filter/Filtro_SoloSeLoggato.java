@@ -8,7 +8,7 @@ import javax.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-@WebFilter({"/home", "/risultati", "/visualizzato", "/ordini", "/carrello", "/immagine", "/logout"})
+@WebFilter({"/home", "/risultati", "/visualizza", "/ordini", "/carrello", "/immagine", "/logout"})
 public class Filtro_SoloSeLoggato implements Filter {
 
     @Override

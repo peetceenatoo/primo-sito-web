@@ -159,7 +159,7 @@ public class Ordini extends HttpServlet {
         }
         
         // calcolo il costo totale dell'ordine
-        double totale = -1;
+        double totale = 0;
         for( Integer i : quantitaPerProdotto.keySet() ) {
 			try {
 				totale += daoProdotto.getPrezzoScontato(i, fornitore.id()) * quantitaPerProdotto.get(i);
@@ -167,10 +167,6 @@ public class Ordini extends HttpServlet {
 				risposta.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore nel calcolo del totale.");
                 return;
 			}
-        }
-        if( totale < 0 ){
-            risposta.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Il totale risulta negativo.");
-            return;
         }
 
         // calcolo l'eventuale fascia di spedizione il totale non supera la soglia per la spedizione gratuita

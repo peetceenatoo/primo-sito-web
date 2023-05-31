@@ -10,6 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+
+import it.polimi.tiw.Bean.Coppia;
 import it.polimi.tiw.Bean.Prodotto;
 import it.polimi.tiw.Bean.Utente;
 
@@ -180,8 +182,8 @@ public class DAO_Prodotto{
         return resultSet.getString("Foto");
     }
     
-    public Map<Prodotto, Double> getProdotti(String queryString) throws SQLException {
-    	Map<Prodotto, Double> prodotti;
+    public List<Coppia<Prodotto,Double>> getProdotti(String queryString) throws SQLException {
+    	List<Coppia<Prodotto, Double>> prodotti;
     	
     	// cerco, tra tutti i prodotti quelli che hanno il nome o la descrizione come specificato in seguito, quelli forniti a prezzo minimo
     	String query = "SELECT P.*, Min(Round((Prezzo*(1-Sconto)),2)) AS Min FROM PRODOTTO P INNER JOIN PRODOTTO_FORNITORE PDF ON P.Id = PDF.IdProdotto WHERE P.Nome LIKE ? OR P.Descrizione LIKE ? GROUP BY P.Id ORDER BY Min;";
@@ -195,11 +197,11 @@ public class DAO_Prodotto{
         ResultSet resultSet = statement.executeQuery();
         
         // istanzio la lista da ritornare
-    	prodotti = new HashMap<>();
+    	prodotti = new LinkedList<>();
 
         // metto i risultati nella lista e ritorno
         while( resultSet.next() )
-            prodotti.put(new Prodotto(resultSet.getInt("Id"), resultSet.getString("Nome"), resultSet.getString("Descrizione"), resultSet.getString("Foto"), resultSet.getString("Categoria")), resultSet.getDouble("Min"));
+            prodotti.add(new Coppia<Prodotto,Double>(new Prodotto(resultSet.getInt("Id"), resultSet.getString("Nome"), resultSet.getString("Descrizione"), resultSet.getString("Foto"), resultSet.getString("Categoria")), resultSet.getDouble("Min")));
         return prodotti;
     }
     
