@@ -96,7 +96,7 @@ public class DAO_Fornitore {
         while( resultSet.next() ){
         	
         	// gli attributi che possono essere null vanno trattati separatamente
-            Integer sogliaSpedizione = resultSet.getInt("SogliaSpedizioneGratuita");
+            Double sogliaSpedizione = resultSet.getDouble("SogliaSpedizioneGratuita");
             if( resultSet.wasNull() )
                 sogliaSpedizione = null;
 
