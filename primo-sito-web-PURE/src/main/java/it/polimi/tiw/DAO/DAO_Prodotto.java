@@ -110,7 +110,7 @@ public class DAO_Prodotto{
         return ultimi;
     }
 	
-    public double getPrezzo(int idProdotto, int idFornitore) throws SQLException {
+    public double getPrezzoScontato(int idProdotto, int idFornitore) throws SQLException {
 
     	// calcolo il prezzo già scontato
         String query = "SELECT IdProdotto, IdFornitore, Round((Prezzo*(1-Sconto)),2) AS Prezzo FROM PRODOTTO_FORNITORE WHERE IdProdotto = ? AND IdFornitore = ?";

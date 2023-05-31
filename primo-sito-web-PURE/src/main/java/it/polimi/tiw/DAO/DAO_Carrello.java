@@ -102,7 +102,7 @@ public class DAO_Carrello {
         // calcolo num e tot
         for( Map.Entry<Integer, Integer> en : carrello.get(idFornitore).entrySet() ){
             num += en.getValue();
-            tot += daoProdotto.getPrezzo(en.getKey(), idFornitore) * en.getValue();
+            tot += daoProdotto.getPrezzoScontato(en.getKey(), idFornitore) * en.getValue();
         }
         // ritorno il risultato
         return new Coppia<Integer,Double>(Integer.valueOf(num),Double.valueOf(tot));
