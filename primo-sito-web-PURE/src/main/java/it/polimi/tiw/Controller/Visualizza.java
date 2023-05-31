@@ -90,7 +90,7 @@ public class Visualizza extends HttpServlet {
         try{
             daoProdotto.setVisualizzato(utente, idVisualizzato);
         } catch(SQLException ex) {
-            risposta.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error while setting product viewed");
+            risposta.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore aggiungendo la visualizzazione.");
             return;
         }
 

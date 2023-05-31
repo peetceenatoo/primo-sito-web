@@ -68,6 +68,7 @@ public class Home extends HttpServlet {
         try {
         	this.templateEngine.process("home", ctx, risposta.getWriter());
         } catch (Throwable e) {
+        	System.out.println(e.getMessage());
         	risposta.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "É stato rilevato un comportamento indesiderato durante l'elaborazione di Thymeleaf della pagina.");
         	return;
         }

@@ -48,7 +48,7 @@ public class Carrello extends HttpServlet {
         DAO_Prodotto daoProdotto = new DAO_Prodotto(connessione);
         DAO_Carrello daoCarrello = new DAO_Carrello(sessione,connessione);
         DAO_Fornitore daoFornitore = new DAO_Fornitore(connessione);
-
+        
         // imposto le variabili richieste da thymeleaf nel foglio html
         ctx.setVariable("carrello", daoCarrello.getCarrello());
         ctx.setVariable("DAOfornitore", daoFornitore);
@@ -61,6 +61,7 @@ public class Carrello extends HttpServlet {
         try{
             this.templateEngine.process("carrello", ctx, risposta.getWriter());
         } catch(Throwable e) {
+        	System.out.println(e.getMessage());
             risposta.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "É stato rilevato un comportamento indesiderato durante l'elaborazione di Thymeleaf della pagina.");
             return;
         }

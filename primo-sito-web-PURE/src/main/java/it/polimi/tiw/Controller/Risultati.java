@@ -81,7 +81,7 @@ public class Risultati extends HttpServlet {
 	        	try {
 	        		prodottiAperti.put(idProdotto, daoFornitore.getFornitori(idProdotto));
 	        	} catch(SQLException ex) {
-	                risposta.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore nel recupero dei fornitori");
+	                risposta.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore nel recupero dei fornitori.");
 	                return;
 	            }
 	        }
@@ -122,7 +122,8 @@ public class Risultati extends HttpServlet {
         // mando la risposta al client (catcho un throwable perchè non conosco il codice sorgente di thymeleaf...
         try{
             this.templateEngine.process("risultati", ctx, risposta.getWriter());
-        } catch(Exception e) {
+        } catch(Throwable e) {
+        	System.out.println(e.getMessage());
             risposta.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "É stato rilevato un comportamento indesiderato durante l'elaborazione di Thymeleaf della pagina.");
             return;
         }
