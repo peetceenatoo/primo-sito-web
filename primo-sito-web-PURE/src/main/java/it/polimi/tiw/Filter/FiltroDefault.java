@@ -36,28 +36,9 @@ public class FiltroDefault implements Filter {
     	HttpServletRequest richiestaHTTP = (HttpServletRequest) richiesta;
         HttpSession sessione = richiestaHTTP.getSession();
 
-        // se sto scaricando il css, il quale non è mappato su una servlet, lo devo servire (SIA SE LOGGATO CHE NON)
-        if( richiestaHTTP.getPathInfo() == "/css/stylesheet.css" ){
-        	// creo uno stream per aprire lo stylesheet in lettura
-        	InputStream inputStream = Files.newInputStream(Paths.get(context.getRealPath("/"), "/css/stylesheet.css.css"));
-        	// prendo  su cui scrivere
-        	ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        	
-        	// Copio a blocchi di byte l'icona nell'output stream usando un buffer da 4096 byte
-        	byte[] buffer = new byte[4096];
-            int tempNumDiBytes;
-            while( ( tempNumDiBytes = inputStream.read(buffer)) != -1 )
-                outputStream.write(buffer, 0, tempNumDiBytes);
-            
-            // imposto il tipo del contenuto
-            risposta.setContentType("text/css");
-            // scrivo sullo stream della risposta
-            risposta.getOutputStream().write(outputStream.toByteArray());
- 
-            return;
-        }
-        // altrimenti mando il redirect alla home (e non continuo sulla chain: se questo filtro di default è stato chiamato è perchè nessun'altra risorsa dev'essere raggiunta
-        ((HttpServletResponse) risposta).sendRedirect(richiestaHTTP.getContextPath() + "/home");
+        // a meno che io stia chiedendo il css (sia loggato che non, posso vederlo), redirecto ad home
+        if( richiestaHTTP.getPathInfo() != "/css/stylesheet.css" )
+        	((HttpServletResponse) risposta).sendRedirect(richiestaHTTP.getContextPath() + "/home");
     }
 
 }
