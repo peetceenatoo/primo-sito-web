@@ -13,8 +13,7 @@
 			<div class="card-container">
 				<div class="card">
 					<div class="card-body">
-					    <p th:unless="${errore == null}" th:text="${errore == true} ? 'Username o password errati.' : ''"
-					       style="color: red" class="card-img-top"></p>
+					    <p th:unless="${errore == null}" th:text="${errore == true} ? 'Username o password errati.' : ''" style="color: red" class="card-img-top"></p>
 					    <form action="#" method="POST">
 					        <label for="email"> Email:</label><br>
 					        <input type="text" id="email" name="email" required><br>

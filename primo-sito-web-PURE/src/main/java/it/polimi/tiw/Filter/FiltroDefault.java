@@ -34,9 +34,9 @@ public class FiltroDefault implements Filter {
     public void doFilter(ServletRequest richiesta, ServletResponse risposta, FilterChain chain) throws IOException, ServletException {
     	// faccio il cast della richiesta prendo la sessione
     	HttpServletRequest richiestaHTTP = (HttpServletRequest) richiesta;
-        HttpSession session = richiestaHTTP.getSession();
+        HttpSession sessione = richiestaHTTP.getSession();
 
-        // se sto scaricando il css, il quale non è mappato su una servlet, lo devo servire
+        // se sto scaricando il css, il quale non è mappato su una servlet, lo devo servire (SIA SE LOGGATO CHE NON)
         if( richiestaHTTP.getPathInfo() == "/css/stylesheet.css" ){
         	// creo uno stream per aprire lo stylesheet in lettura
         	InputStream inputStream = Files.newInputStream(Paths.get(context.getRealPath("/"), "/css/stylesheet.css.css"));
