@@ -18,9 +18,6 @@ public class Filtro_SoloSeLoggato implements Filter {
         HttpSession sessione = richiestaHTTP.getSession();
         
         // se la sessione per l'utente non è attiva, forzo la pagina di login
-        // 		( per ora l'esistenza della sessione è strettamente equivalente ad aver fatto il login,
-        // 		  quindi non serve controllare l'attributo utente perchè con il logout viene cancellata
-        // 		  e senza login non viene creata )
         if( sessione.isNew() || ( sessione.getAttribute("utente") == null ) )
             ((HttpServletResponse) risposta).sendRedirect(richiestaHTTP.getContextPath() + "/login");
         // altrimenti mando alla servlet
