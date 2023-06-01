@@ -37,8 +37,13 @@ public class FiltroDefault implements Filter {
         HttpSession sessione = richiestaHTTP.getSession();
 
         // a meno che io stia chiedendo il css (sia loggato che non, posso vederlo), redirecto ad home
-        if( richiestaHTTP.getPathInfo() != "/css/stylesheet.css" )
+        if( richiestaHTTP.getPathInfo() != "/css/stylesheet.css" ){
         	((HttpServletResponse) risposta).sendRedirect(richiestaHTTP.getContextPath() + "/home");
+        	return;
+        }
+        	
+        // mando al file
+        chain.doFilter(richiesta, risposta);
     }
 
 }
