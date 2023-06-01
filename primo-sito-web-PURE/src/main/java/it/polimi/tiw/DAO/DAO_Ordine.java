@@ -59,7 +59,7 @@ public class DAO_Ordine{
 
             // aggiungo tutti i dettagli dell'ordine corrente 
             while( resultSet2.next() )
-            	dettagli.add(new DettaglioOrdine(resultSet2.getInt("Id"), resultSet2.getInt("IdOrdine"), resultSet2.getInt("IdProdotto"), resultSet2.getDouble("PrezzoProdotto"), resultSet2.getInt("Quantita")));
+            	dettagli.add(new DettaglioOrdine(resultSet2.getInt("IdOrdine"), resultSet2.getInt("IdProdotto"), resultSet2.getDouble("PrezzoProdotto"), resultSet2.getInt("Quantita")));
             
             // salvo la data di spedizione dell'ordine corrente
             Date data = resultSet.getDate("DataSpedizione");
