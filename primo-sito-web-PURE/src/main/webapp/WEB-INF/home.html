@@ -5,24 +5,22 @@
     <head>
         <meta charset="UTF-8">
         <title>Home</title>
-        <link rel="stylesheet" type="text/css" media="all"
-              href="../css/stylesheet.css" th:href="@{/css/stylesheet.css}" />
+        <link rel="stylesheet" type="text/css" media="all" href="../css/stylesheet.css" th:href="@{/css/stylesheet.css}" />
     </head>
+    
     <body>
-
-    <div th:insert="@{menu/menuHome.html} :: navbar"></div>
-
-    <h2 th:if="${prodotti.isEmpty()}">Nessun prodotto nel DB</h2>
-    <h2 th:if="${!prodotti.isEmpty()}">Hai visto di recente (o potrebbe interessarti):</h2>
-    <br/>
-    <div class="card-container">
-        <div class="card" style="width: 18rem;" th:if="${!prodotti.isEmpty()}" th:each="prod : ${prodotti}">
-            <img th:src="@{${'/immagine?idProdotto=' + prod.id}}" class="card-img-top"/>
-            <div class="card-body">
-                <p th:text="${prod.nome()}" class="card-text"></p>
-            </div>
-        </div>
-    </div>
-
+	    <div th:insert="@{menu/menuHome.html} :: navbar"></div>
+	    <h2 th:if="${prodotti.isEmpty()}">Nessun prodotto nel DB</h2>
+	    <h2 th:if="${!prodotti.isEmpty()}">Hai visto di recente (o potrebbe interessarti):</h2><br/>
+	    
+	    <div class="card-container">
+	        <div class="card" style="width: 18rem;" th:if="${!prodotti.isEmpty()}" th:each="prod : ${prodotti}">
+	            <img th:src="@{${'/immagine?idProdotto=' + prod.id}}" class="card-img-top"/>
+	            <div class="card-body">
+	                <p th:text="${prod.nome()}" class="card-text"></p>
+	            </div>
+	        </div>
+	    </div>
     </body>
+    
 </html>

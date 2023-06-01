@@ -1,28 +1,31 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login Page</title>
-    <link rel="stylesheet" type="text/css" media="all"
-              href="../css/stylesheet.css" th:href="@{/css/stylesheet.css}" />
-</head>
-<body>
-<div class="centered">
-	<div class="card-container">
-		<div class="card">
-			<div class="card-body">
-			    <p th:unless="${errore == null}" th:text="${errore == true} ? 'Username o password errati.' : ''"
-			       style="color: red" class="card-img-top"></p>
-			    <form action="#" method="POST">
-			        <label for="email"> Email:</label><br>
-			        <input type="text" id="email" name="email" required><br>
-			        <label for="password">Password: </label><br>
-			        <input type="password" id="password" name="password" required><br><br>
-			        <input type="Submit" value="Conferma">
-			    </form>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+	    <meta charset="UTF-8">
+	    <title>Login Page</title>
+	    <link rel="stylesheet" type="text/css" media="all" href="../css/stylesheet.css" th:href="@{/css/stylesheet.css}" />
+	</head>
+	
+	<body>
+		<div class="centered">
+			<div class="card-container">
+				<div class="card">
+					<div class="card-body">
+					    <p th:unless="${errore == null}" th:text="${errore == true} ? 'Username o password errati.' : ''"
+					       style="color: red" class="card-img-top"></p>
+					    <form action="#" method="POST">
+					        <label for="email"> Email:</label><br>
+					        <input type="text" id="email" name="email" required><br>
+					        <label for="password">Password: </label><br>
+					        <input type="password" id="password" name="password" required><br><br>
+					        <input type="Submit" value="Conferma">
+					    </form>
+					</div>
+				</div>
 			</div>
 		</div>
-	</div>
-</div>
-</body>
+	</body>
+	
 </html>

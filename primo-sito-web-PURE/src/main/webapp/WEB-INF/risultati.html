@@ -7,12 +7,10 @@
         <title>Risultati</title>
         <link rel="stylesheet" type="text/css" media="all"
               href="../css/stylesheet.css" th:href="@{/css/stylesheet.css}" />
-
     </head>
+    
     <body>
-
         <div th:insert="@{menu/menu.html} :: navbar (prodotti = ${prodotti})"></div>
-
         <div>
             <p th:if="${risultati.isEmpty()}">Nessun risultato corrisponde alla ricerca...</p>
 
@@ -75,7 +73,6 @@
             </div>
 
         </div>
-
-
     </body>
+    
 </html>

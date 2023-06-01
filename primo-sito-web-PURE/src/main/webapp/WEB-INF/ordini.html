@@ -5,14 +5,11 @@
     <head>
         <meta charset="UTF-8">
         <title>Ordini</title>
-        <link rel="stylesheet" type="text/css" media="all"
-              href="../css/stylesheet.css" th:href="@{/css/stylesheet.css}" />
-
+        <link rel="stylesheet" type="text/css" media="all" href="../css/stylesheet.css" th:href="@{/css/stylesheet.css}" />
     </head>
+    
     <body>
-
         <div th:insert="@{menu/menu.html} :: navbar"></div>
-
         <div>
             <p th:if="${ordini.isEmpty()}">Non hai ancora effettuato alcun ordine.</p>
 
@@ -49,12 +46,12 @@
                                 </tbody>
                             </table>
                         </div>
+                        
                     </li>
                 </ul>
             </div>
 
         </div>
-
-
     </body>
+    
 </html>
