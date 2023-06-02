@@ -14,8 +14,7 @@ public class Logout extends HttpServlet {
 
     protected void doPost(HttpServletRequest richiesta, HttpServletResponse risposta) throws IOException {
 
-    	// basta porre l'attributo utente = null perchè il filtro controlla entrambe le cose...
-    	// in generale, così, la sessione è strettamente equivalente ad avere fatto il login
+    	// rendo la sessione non valida
         richiesta.getSession(false).invalidate();
 
         // imposto la codifica
