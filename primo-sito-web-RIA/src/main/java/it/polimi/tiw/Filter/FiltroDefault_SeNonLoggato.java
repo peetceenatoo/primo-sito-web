@@ -17,11 +17,8 @@ import javax.servlet.http.HttpSession;
 @WebFilter("/")
 public class FiltroDefault_SeNonLoggato implements Filter {
 
-    private ServletContext context;
-
     @Override
     public void init(FilterConfig config) throws ServletException {
-        this.context = config.getServletContext();
     }
     
     @Override
@@ -41,7 +38,7 @@ public class FiltroDefault_SeNonLoggato implements Filter {
         }
         // altrimenti 404
         if( ( richiestaHTTP.getPathInfo() != "/css/stylesheet.css" ) && ( richiestaHTTP.getPathInfo() != "/js/utils.js" ) ){
-        	((HttpServletResponse) risposta).setStatus(HttpServletResponse.SC_FORBIDDEN);
+        	((HttpServletResponse) risposta).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         	return;
         }
         
