@@ -9,7 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-@WebFilter({"/login", "/login.html", "js/login.js"})
+@WebFilter(urlPatterns = {"/login", "/login.html", "/js/login.js"})
 public class Filtro_SoloSeNonLoggato implements Filter {
 
         @Override

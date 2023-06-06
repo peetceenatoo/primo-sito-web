@@ -38,7 +38,7 @@ public class FiltroDefault_SeNonLoggato implements Filter {
         }
         // altrimenti 404
         if( ( richiestaHTTP.getPathInfo() != "/css/stylesheet.css" ) && ( richiestaHTTP.getPathInfo() != "/js/utils.js" ) ){
-        	((HttpServletResponse) risposta).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        	((HttpServletResponse) risposta).setStatus(HttpServletResponse.SC_NOT_FOUND);
         	return;
         }
         
