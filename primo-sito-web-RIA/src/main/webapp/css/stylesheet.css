@@ -116,6 +116,7 @@ fieldset{
 
 /* Stile predefinito della card */
 .card {
+	width: 18rem;
     position: relative;
     display: -ms-flexbox;
     display: flex;

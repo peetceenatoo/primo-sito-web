@@ -14,7 +14,7 @@
 	    <h2 th:if="${!prodotti.isEmpty()}">Hai visto di recente (o potrebbe interessarti):</h2><br/>
 	    
 	    <div class="card-container">
-	        <div class="card" style="width: 18rem;" th:if="${!prodotti.isEmpty()}" th:each="prod : ${prodotti}">
+	        <div class="card" th:if="${!prodotti.isEmpty()}" th:each="prod : ${prodotti}">
 	            <img th:src="@{${'/immagine?idProdotto=' + prod.id}}" class="card-img-top"/>
 	            <div class="card-body">
 	                <p th:text="${prod.nome()}" class="card-text"></p>
