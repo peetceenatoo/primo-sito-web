@@ -64,12 +64,6 @@ public class Ordini extends HttpServlet {
             risposta.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore nel recupero degli ordini dal DB.");
             return;
         }
-
-        // se la lista è null c'è stato un errore
-        if( ordini == null ){
-            risposta.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore nel recupero degli ordini dell'utente loggato.");
-            return;
-        }
         
         // creo un dao prodotto
         DAO_Prodotto daoProdotto = new DAO_Prodotto(connessione);
