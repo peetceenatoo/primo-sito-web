@@ -11,6 +11,7 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.UnavailableException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,7 @@ import it.polimi.tiw.DAO.DAO_Prodotto;
 import it.polimi.tiw.Utility.ConnectionInitializer;
 
 @WebServlet(value="/immagine")
+@MultipartConfig
 public class Image extends HttpServlet {
 
     private static final long serialVersionUID = 1L;

@@ -7,6 +7,7 @@ import it.polimi.tiw.DAO.DAO_Utente;
 import it.polimi.tiw.Utility.ConnectionInitializer;
 
 import javax.servlet.UnavailableException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +18,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 @WebServlet(value="/login")
+@MultipartConfig
 public class Login extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -66,18 +68,15 @@ public class Login extends HttpServlet {
             risposta.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
-        // altrimenti è andato a buon fine
-        else {
-        	// ritorno l'utente
-            richiesta.getSession(true).setAttribute("utente", utente);
-            risposta.setStatus(HttpServletResponse.SC_OK);
-            risposta.setContentType("application/json");
-            // imposto la codifica
-            risposta.setCharacterEncoding("UTF-8");
-            // mando la risposta
-            risposta.getWriter().println(new Gson().toJson(utente.email()));
-        }
 
+    	// ritorno l'utente
+        richiesta.getSession(true).setAttribute("utente", utente);
+        risposta.setStatus(HttpServletResponse.SC_OK);
+        risposta.setContentType("application/json");
+        // imposto la codifica
+        risposta.setCharacterEncoding("UTF-8");
+        // mando la risposta
+        risposta.getWriter().println(new Gson().toJson(utente.email()));
     }
 
     @Override

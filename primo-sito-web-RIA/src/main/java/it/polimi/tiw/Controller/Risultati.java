@@ -9,6 +9,7 @@ import it.polimi.tiw.DAO.DAO_Prodotto;
 
 import javax.servlet.ServletException;
 import javax.servlet.UnavailableException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @WebServlet(value = "/risultati")
+@MultipartConfig
 public class Risultati extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
