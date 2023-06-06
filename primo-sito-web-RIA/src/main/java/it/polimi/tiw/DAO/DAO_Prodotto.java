@@ -5,14 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
 
 import it.polimi.tiw.Bean.Coppia;
 import it.polimi.tiw.Bean.Prodotto;
+import it.polimi.tiw.Bean.ProdottoDiUnFornitore;
 import it.polimi.tiw.Bean.Utente;
 
 public class DAO_Prodotto{
@@ -205,7 +204,7 @@ public class DAO_Prodotto{
         return prodotti;
     }
     
-    public void setVisualizzato(Utente utente, int idProdotto) throws SQLException {
+    public void setVisualizzato(String email, int idProdotto) throws SQLException {
     	// inserisco una nuova riga di visualizzazione
     	// assumo di non voler dimenticare le visualizzazioni precedenti, quindi non le elimino
         String query = "INSERT INTO VISUALIZZAZIONE (Email, IdProdotto) VALUES(?, ?)";
@@ -213,10 +212,28 @@ public class DAO_Prodotto{
         // pre-compila la query se sintatticamente corretta
         PreparedStatement statement = connessione.prepareStatement(query);
         // imposto i parametri della query
-        statement.setString(1, utente.email());
+        statement.setString(1, email);
         statement.setInt(2, idProdotto);
         // eseguo la query
         statement.executeUpdate();
+    }
+    
+    public List<Coppia<Integer,Integer>> getListino() throws SQLException{
+    	List<Coppia<Integer,Integer>> risultati = new ArrayList<>();
+    	
+    	// prendo tutte le informazioni necessarie sul prodotto con il prezzo già scontato
+    	String query = "SELECT IdProdotto, IdFornitore FROM PRODOTTO_FORNITORE;";
+    	
+    	// pre-compila la query se sintatticamente corretta
+        PreparedStatement statement = connessione.prepareStatement(query);
+        // eseguo la query
+        ResultSet resultSet = statement.executeQuery();
+
+        // metto i risultati nella lista e ritorno
+        while( resultSet.next() ){
+        	risultati.add(new Coppia<Integer,Integer>(resultSet.getInt("idProdotto"), resultSet.getInt("idFornitore")));
+        }
+        return risultati;
     }
      
 }
