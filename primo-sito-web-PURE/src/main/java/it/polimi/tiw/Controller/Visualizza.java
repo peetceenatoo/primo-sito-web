@@ -35,7 +35,6 @@ public class Visualizza extends HttpServlet {
     	String[] aperti;
     	int idVisualizzato;
     	
-    	
     	// imposto la codifica per leggere i parametri, coerentemente all'HTML
         richiesta.setCharacterEncoding("UTF-8");
 
@@ -43,7 +42,6 @@ public class Visualizza extends HttpServlet {
         idVisualizzatoS = richiesta.getParameter("visualizzato");
         aperti = richiesta.getParameterValues("aperto");
         queryString = richiesta.getParameter("queryString");
-
         // se c'è stato un errore nella post del login, rispondo al client con un messaggio di errore
         if( ( idVisualizzatoS == null ) || idVisualizzatoS.isEmpty() || ( queryString == null ) || queryString.isEmpty() ){
             risposta.sendError(HttpServletResponse.SC_BAD_REQUEST, "QueryString e IdVisualizzato non possono essere vuoti.");
@@ -90,9 +88,7 @@ public class Visualizza extends HttpServlet {
         	return;
         }
 
-        // prendo la sessione e quindi l'utente associato
-        HttpSession session = richiesta.getSession(false);
-        Utente utente = (Utente)session.getAttribute("utente");
+        Utente utente = (Utente)richiesta.getSession(false).getAttribute("utente");
 
         // aggiungo il prodotto aperto alla tabella delle visualizzazioni
         try{

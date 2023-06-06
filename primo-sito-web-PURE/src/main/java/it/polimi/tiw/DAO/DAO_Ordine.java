@@ -51,9 +51,6 @@ public class DAO_Ordine{
             // pre-compila la query 1 se sintatticamente corretta
             ResultSet resultSet2 = statement2.executeQuery();
 
-            // controllo se esiste almeno un dettaglio per l'ordine corrente: non dovrebbe succedere
-            if( !resultSet2.isBeforeFirst() ) throw new SQLException("Errore: questo ordine risulta vuoto!");
-
             // istanzio la lista con i dettagli
             dettagli = new ArrayList<>();
 

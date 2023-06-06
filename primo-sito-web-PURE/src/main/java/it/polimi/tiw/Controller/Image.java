@@ -64,10 +64,12 @@ public class Image extends HttpServlet {
             risposta.sendError(HttpServletResponse.SC_BAD_REQUEST, "Id Prodotto non valido.");
             return;
         }
+        
+        // imposto la codifica
+        risposta.setCharacterEncoding("UTF-8");
 
         // recupero il file
         file = new File(this.percorsoBase, percorsoRelativo);
-
         // se il file non esiste o se risulta essere una directory
         if ( !file.exists() || file.isDirectory() ) {
         	// creo uno stream per aprire l'icona "non trovato" in lettura
@@ -75,7 +77,7 @@ public class Image extends HttpServlet {
             // creo un output stream di byte su cui scrivere con cui poi riempirò quello della risposta
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-            // Copio a blocchi di byte l'icona nell'output stream usando un buffer da 4096 byte
+            // copio a blocchi di byte l'icona nell'output stream usando un buffer da 4096 byte
             byte[] buffer = new byte[4096];
             int tempNumDiBytes;
             while( ( tempNumDiBytes = inputStream.read(buffer)) != -1 )
@@ -98,7 +100,7 @@ public class Image extends HttpServlet {
         	risposta.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "L'immagine richiesta è troppo grande.");
             return;
         }
-        // altrimenti imposto la dimensione del file di risposta
+        // altrimenti imposto kkjla dimensione del file di risposta
         risposta.setContentLength((int)file.length());
         
         // imposto il tipo della risposta, in generale non conoscendo il formato della foto 
