@@ -1,13 +1,3 @@
-fieldset{
-    border: none;
-    margin: none;
-    padding: none;
-    padding-block-start: 0em;
-    padding-inline-start: 0em;
-    padding-inline-end: 0em;
-    padding-block-end: 0.625em;
-}
-
 .navbar{
     display: flex;
     flex-direction: row;
@@ -105,6 +95,16 @@ tr:nth-child(even) {
     width: 25%;
 }
 
+fieldset{
+    border: none;
+    margin: none;
+    padding: none;
+    padding-block-start: 0em;
+    padding-inline-start: 0em;
+    padding-inline-end: 0em;
+    padding-block-end: 0.625em;
+}
+
 .card-container{
     display: flex;
     flex-direction: row;
@@ -153,4 +153,14 @@ tr:nth-child(even) {
 .card-text {
     margin-top: 0;
     margin-bottom: 1rem;
+}
+
+.modal-content {
+    display: none;
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%;
+    height: auto;
+    position: absolute;
 }
