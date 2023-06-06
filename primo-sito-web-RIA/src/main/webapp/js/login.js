@@ -7,6 +7,8 @@
 	// se sono loggato voglio essere su home-page.html
 	if( sessionStorage.getItem("utente") !== null )
         window.location.href = "home-page.html";
+        
+    document.getElementById("errormessage").style.display = "none";
 
 	// prendo l'id del form di login
     form = document.getElementById("frmLogin");
@@ -26,12 +28,15 @@
                             window.location.href = "home-page.html";
                             break;
                         case 400: // bad request
+                        	document.getElementById("errormessage").style.display = "block";
                             document.getElementById("errormessage").textContent = "Bad Request";
                             break;
                         case 401: // unauthorized
+                        	document.getElementById("errormessage").style.display = "block";
                             document.getElementById("errormessage").textContent = "Unauthorized";
                             break;
                         case 500: // server error
+                        	document.getElementById("errormessage").style.display = "block";
                             document.getElementById("errormessage").textContent = "Server error";
                             break;
                     }
