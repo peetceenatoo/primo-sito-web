@@ -5,13 +5,8 @@
 	var form;
 	
 	// se sono loggato voglio essere su home-page.html
-	window.addEventListener('load', function() { askLogged( function(x){
-                if( x.readyState == XMLHttpRequest.DONE ) {
-                    if( x.responseText == "yes" )
-						window.location.href = "home-page.html";
-            	}
-        	} )
-        } );
+	if( sessionStorage.getItem("utente") !== null )
+        window.location.href = "home-page.html";
 
 	// prendo l'id del form di login
     form = document.getElementById("frmLogin");
@@ -23,10 +18,11 @@
 	    if( form.checkValidity() )
 			
 			// faccio la chiamata alla servlet di login
-	        makeCall("POST", 'login', form, function(x){
-                if ( x.readyState == XMLHttpRequest.DONE ) {
-                    switch (x.status) {
+	        makeCall("POST", 'login', form, function(risposta){
+                if ( risposta.readyState == XMLHttpRequest.DONE ) {
+                    switch( risposta.status ){
                         case 200: // ok
+                        	sessionStorage.setItem("utente", risposta.responseText);
                             window.location.href = "home-page.html";
                             break;
                         case 400: // bad request

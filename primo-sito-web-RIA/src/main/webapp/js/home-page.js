@@ -1,6 +1,12 @@
 {
 	/************************************************************************************/
 	
+	// se non sono loggato esco
+	if( sessionStorage.getItem("utente") == null )
+        logout();
+    
+	/************************************************************************************/
+	
 	// dichiaro il pageOrchestrator e le variabili che conterranno i componenti della pagina
     let home, search, carrello, ordini;
     let pageOrchestrator = new PageOrchestrator();
@@ -8,27 +14,25 @@
     /************************************************************************************/
 	
 	// se quando la pagina carica per la prima volta non sono loggato chiamo logout, altrimenti visualizzo la home
-	window.addEventListener('load', function(){ askLogged( function(x){
-	            if( x.readyState == XMLHttpRequest.DONE ) {
-	                if( x.responseText == "no" )
-						logout();
-					else if( x.responseText == "yes" ){
-						pageOrchestrator.start();
-						start();
-					}
-	        	}
-	    	} );
+	window.addEventListener('load', function(){
+			pageOrchestrator.start();
+            if( sessionStorage.getItem("utente") == null )
+        		logout()
+    		else
+        		start();
 	    } );
 	    
 	/************************************************************************************/
 
 	// questo metodo prova a fare il logout e in ogni caso torno a login.html
     function logout(){
-        makeCall("POST", 'logout', null, function(){
-            window.location.href = "login.html";
+        makeCall("POST", 'logout', null, function(risposta){
+        	if( risposta.readyState === XMLHttpRequest.DONE ){
+                sessionStorage.clear();
+                window.location.href = "login.html";
+            }
         } );
-        sessionStorage.removeItem("carrello");
-    }
+    }	
 
 	// visualizzo la home per la prima volta
     function start(){
@@ -91,40 +95,28 @@
 		// mostro la home
         this.showHome = function(){
             this.hide();
-            askLogged( function(x){
-	            if( x.readyState == XMLHttpRequest.DONE ) {
-	                if( x.responseText == "no" )
-						logout();
-					else if( x.responseText == "yes" )
-						home.show();
-	        	}
-    		} );
+            if( sessionStorage.getItem("utente") == null )
+        		logout();
+        	else
+        		home.show();
         }
 
 		// mostro il carrello
         this.showCarrello = function(){
             this.hide();
-            askLogged( function(x){
-	            if( x.readyState == XMLHttpRequest.DONE ) {
-	                if( x.responseText == "no" )
-						logout();
-					else if( x.responseText == "yes" )
-						carrello.show();
-	        	}
-    		} );
+            if( sessionStorage.getItem("utente") == null )
+        		logout();
+        	else
+        		carrello.show();
         }
 
 		// mostro gli ordini
         this.showOrdini = function(){
             this.hide();
-            askLogged( function(x){
-	            if( x.readyState == XMLHttpRequest.DONE ) {
-	                if( x.responseText == "no" )
-						logout();
-					else if( x.responseText == "yes" )
-						ordini.show();
-	        	}
-    		} );
+            if( sessionStorage.getItem("utente") == null )
+        		logout();
+        	else
+        		ordini.show();
         }
     }
     
@@ -138,23 +130,26 @@
         this.show = function(){
 			// salvo this in self per colpa della visibilità di js
             let self = this;
-
+            
 			// aggiungo la barra di ricerca nella navbar, prima inserendo il div al posto giusto, qui il form, dunque la barra
-            let divSearch = document.createElement('div');
-            divSearch.classList.add("searchForm");
-            document.getElementById("navbar").insertBefore(divSearch, document.getElementById("btnLogout"));
-            let formSearch = document.createElement('form');
-            formSearch.action = "#";
-            formSearch.id = "formRisultati";
-            divSearch.appendChild(formSearch);
-            let inputSearch = document.createElement('input');
-            inputSearch.type = "text";
-            inputSearch.placeholder = "Cerca...";
-            inputSearch.name = "queryString";
-            inputSearch.required = true;
-            formSearch.appendChild(inputSearch);
-			// in caso di invio, chiamo il metodo handleSearch (bubbling phase)
-            formSearch.addEventListener("submit", search.handleSearch);
+            let divSearch = document.querySelector('.searchForm');
+			if( !divSearch ){
+				divSearch = document.createElement('div');
+	            divSearch.classList.add("searchForm");
+	            document.getElementById("navbar").insertBefore(divSearch, document.getElementById("btnLogout"));
+	            let formSearch = document.createElement('form');
+	            formSearch.action = "#";
+	            formSearch.id = "formRisultati";
+	            divSearch.appendChild(formSearch);
+	            let inputSearch = document.createElement('input');
+	            inputSearch.type = "text";
+	            inputSearch.placeholder = "Cerca...";
+	            inputSearch.name = "queryString";
+	            inputSearch.required = true;
+	            formSearch.appendChild(inputSearch);
+				// in caso di invio, chiamo il metodo handleSearch (bubbling phase)
+	            formSearch.addEventListener("submit", search.handleSearch);
+	        }
 
 			// recupero dal server gli ultimi visualizzati e gestisco la risposta in base allo stato
             makeCall("GET", "ultimiVisualizzati", null, function(risposta){
@@ -749,6 +744,11 @@
         this.show = function(){
 			// salvo this in self per colpa della visibilità di js
             const self = this;
+            
+            // se presente la divSearch la tolgo
+            let divSearch = document.querySelector('.searchForm');
+			if( divSearch )
+  				divSearch.remove();
 
 			// aggiungo il titolo
             let h2 = document.createElement('h2');
@@ -1056,7 +1056,7 @@
             if( ( carrelloFornitore.prodotti == null ) || ( Object.keys(carrelloFornitore.prodotti).length == 0 ) || ( carrelloFornitore.prodotti.length == 0 ) ){
                 alert("Valore dell'id del fornitore non valido.");
                 carrello = carrello.filter(o => o.idFornitore != idFornitore);
-                localStorage.setItem(JSON.stringify(carrello));
+                sessionStorage.setItem(JSON.stringify(carrello));
                 return;
             }
 
@@ -1128,6 +1128,11 @@
         this.show = function(){
 			// salvo this in self per colpa della visibilità di js
             const self = this;
+            
+            // se presente la divSearch la tolgo
+            let divSearch = document.querySelector('.searchForm');
+			if( divSearch )
+  				divSearch.remove();
 
 			// faccio la chiamata di get per vedere gli ordini
             makeCall("GET", "ordini", null, function(risposta){

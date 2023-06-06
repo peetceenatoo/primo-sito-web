@@ -1,22 +1,3 @@
-// mando una richiesta ad AskLogged specificando la callback callback
-function askLogged(callback) {
-	// creo un oggetto HttpRequest
-    var richiesta = new XMLHttpRequest();
-
-	// definisco la callback da eseguire al termine della richiesta
-    richiesta.onreadystatechange = function() {
-        callback(richiesta)
-    };
-    
-    // inizializzo la richiesta
-    richiesta.open("GET", 'askLogged');
-    
-    // mando la richiesta
-    richiesta.send();
-    
-    // e poi verrà eseguita la callback
-}
-
 // manda una richiesta http con metodo metodo, all'url url, fornendo il form form e specificando la callback callback
 function makeCall(metodo, url, form, callback, reset = true) {
 	// creo un oggetto HttpRequest
@@ -31,7 +12,10 @@ function makeCall(metodo, url, form, callback, reset = true) {
     richiesta.open(metodo, url);
     
     // mando la richiesta
-    richiesta.send(new FormData(form));
+    if( form != null )
+    	richiesta.send(new FormData(form));
+    else
+    	richiesta.send();
 
 	// se il form era stato riempito, lo ripristino
     if( ( form !== null ) && ( reset === true ) )
