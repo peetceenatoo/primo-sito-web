@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import it.polimi.tiw.Bean.Coppia;
 import it.polimi.tiw.Bean.FasciaDiSpedizione;
 import it.polimi.tiw.Bean.Fornitore;
 
@@ -126,6 +127,38 @@ public class DAO_Fornitore {
         	return null;
         else
         	return rs.getInt("Prezzo");
+    }
+	
+	public Map<Fornitore, Coppia<Double,Double>> getFornitoriConPrezzi(int idProdotto) throws SQLException {
+		Map<Fornitore, Coppia<Double,Double>> fornitori;
+		
+		// prendo tutti i fornitori, con il prezzo scontato e lo sconto relativi per il prodotto specificato 
+        String query = "SELECT F.*, Round((Prezzo*(1-Sconto)),2) AS Prezzo, Sconto FROM PRODOTTO_FORNITORE PDF INNER JOIN FORNITORE F ON PDF.IdFornitore = F.Id WHERE IdProdotto = ?";
+        
+        // pre-compila la query 1 se sintatticamente corretta
+        PreparedStatement statement = connessione.prepareStatement(query);
+        // imposto i parametri della query
+        statement.setInt(1, idProdotto);
+        // eseguo la query
+        ResultSet resultSet = statement.executeQuery();
+
+        // istanzio la mappa da ritornare
+        fornitori = new HashMap<>();
+
+        // metto i risultati nella lista e ritorno
+        while( resultSet.next() ){
+        	// prendo l'eventuale soglia di spedizione gratuita
+            Double sogliaSpedizione = resultSet.getDouble("SogliaSpedizioneGratuita");
+            if( resultSet.wasNull() )
+                sogliaSpedizione = null;
+            
+            // prendo il fornitore e lo aggiungo alla mappa con relativo prezzo scontato e sconto
+            Fornitore f = new Fornitore(resultSet.getInt("Id"), resultSet.getString("Nome"), resultSet.getDouble("Valutazione"), sogliaSpedizione, this.getFasceDiSpedizione(resultSet.getInt("Id")));
+            fornitori.put(f, new Coppia<Double,Double>( resultSet.getDouble("Prezzo"), resultSet.getDouble("Sconto")));
+        }
+        // ritorno il risultato
+        return fornitori;
+
     }
 
 }
