@@ -8,7 +8,7 @@
     /************************************************************************************/
 	
 	// se quando la pagina carica per la prima volta non sono loggato chiamo logout, altrimenti visualizzo la home
-	window.addEventListener('load', function() { askLogged( function(x){
+	window.addEventListener('load', function(){ askLogged( function(x){
 	            if( x.readyState == XMLHttpRequest.DONE ) {
 	                if( x.responseText == "no" )
 						logout();
@@ -17,13 +17,13 @@
 						start();
 					}
 	        	}
-	    	} ) 
+	    	} );
 	    } );
 	    
 	/************************************************************************************/
 
 	// questo metodo prova a fare il logout e in ogni caso torno a login.html
-    function logout() {
+    function logout(){
         makeCall("POST", 'logout', null, function(){
             window.location.href = "login.html";
         } );
@@ -31,7 +31,7 @@
     }
 
 	// visualizzo la home per la prima volta
-    function start() {
+    function start(){
         pageOrchestrator.showHome();
     }
     
@@ -43,7 +43,7 @@
         this.container = document.getElementById('container');
 	
 		// metodo che inizializza l'oggetto
-        this.start = function () {
+        this.start = function(){
 			// salvo this in self per colpa della visibilità di js
             const self = this;
             
@@ -57,25 +57,25 @@
             ordini = new ManagerOrdine(this.container);
 
 			// assegno al bottone carrello la funzione
-            document.getElementById('aCarrello').onclick = function()  {
+            document.getElementById('aCarrello').onclick = function(){
                 self.hide();
                 self.showCarrello();
             };
 
 			// assegno al bottone ordini la funzione
-            document.getElementById('aOrdini').onclick = function()  {
+            document.getElementById('aOrdini').onclick = function(){
                 self.hide();
                 self.showOrdini();
             };
 
 			// assegno al bottone Home la funzione
-            document.getElementById('aHome').onclick = function() {
+            document.getElementById('aHome').onclick = function(){
                 self.hide();
                 self.showHome();
             };
             
             // aggiungo la funzione al click del bottone di logout
-            document.getElementById("btnLogout").addEventListener("click", function (){
+            document.getElementById("btnLogout").addEventListener("click", function(){
 	            logout();
         	});	
 	
@@ -84,12 +84,12 @@
         }
         
         // svuoto la pagina
-        this.hide = function (){
+        this.hide = function(){
             this.container.innerHTML = "";
         }
 
 		// mostro la home
-        this.showHome = function (){
+        this.showHome = function(){
             this.hide();
             askLogged( function(x){
 	            if( x.readyState == XMLHttpRequest.DONE ) {
@@ -102,7 +102,7 @@
         }
 
 		// mostro il carrello
-        this.showCarrello = function() {
+        this.showCarrello = function(){
             this.hide();
             askLogged( function(x){
 	            if( x.readyState == XMLHttpRequest.DONE ) {
@@ -115,7 +115,7 @@
         }
 
 		// mostro gli ordini
-        this.showOrdini = function () {
+        this.showOrdini = function(){
             this.hide();
             askLogged( function(x){
 	            if( x.readyState == XMLHttpRequest.DONE ) {
@@ -131,11 +131,11 @@
     /************************************************************************************/
 	
 	// pagina-componente home
-    function Home(container) {
+    function Home(container){
         this.container = container;
 
 		// metodo che mostra la home
-        this.show = function (){
+        this.show = function(){
 			// salvo this in self per colpa della visibilità di js
             let self = this;
 
@@ -157,7 +157,7 @@
             formSearch.addEventListener("submit", search.handleSearch);
 
 			// recupero dal server gli ultimi visualizzati e gestisco la risposta in base allo stato
-            makeCall("GET", "ultimiVisualizzati", null, function (risposta){
+            makeCall("GET", "ultimiVisualizzati", null, function(risposta){
                 if( risposta.readyState === XMLHttpRequest.DONE ){
                     switch( risposta.status ){
                         case 200: // ok
@@ -245,14 +245,14 @@
     /************************************************************************************/
 
 	// classe per la ricerca
-    function Search(container) {
+    function Search(container){
         this.containter = container;
 
 		// salvo this in self per colpa della visibilità di js
         const self = this;
 
 		// questo metodo effettua la ricerca dei risultati
-        this.handleSearch = function (e){
+        this.handleSearch = function(e){
 			// impedisco l'azione di default di submit (action)
             e.preventDefault();
             // svuoto la pagina
@@ -265,7 +265,7 @@
             if( form.checkValidity() )
                 
 				// faccio la chiamata alla servlet dei risultati
-                makeCall("GET", 'risultati?' + new URLSearchParams(new FormData(form)).toString(), null, function (risposta) {
+                makeCall("GET", 'risultati?' + new URLSearchParams(new FormData(form)).toString(), null, function(risposta){
                     if ( risposta.readyState === XMLHttpRequest.DONE )
                     
                         switch( risposta.status ){
@@ -300,7 +300,7 @@
         }
 
 		// metodo che mostra i risultati
-        this.showRisultati = function (risposta){
+        this.showRisultati = function(risposta){
             let risultati;
             try {
                 risultati = JSON.parse(risposta.responseText);
@@ -331,14 +331,14 @@
 
 				// aggiungo id, nome del prodotto e testo come intestazione della riga
                 let a = document.createElement('a');
-                let prodotto = document.createTextNode(risultati[i].prodotto.id + " - " + risultati[i].prodotto.nome + ": " + (risultati[i].prezzo).toFixed(2) + " €")
+                let prodotto = document.createTextNode(risultati[i].primo.id + " - " + risultati[i].primo.nome + ": " + (risultati[i].secondo).toFixed(2) + " €")
                 a.appendChild(prodotto);
                 a.classList.add("listview-row-title");
                 li.appendChild(a);
-                a.setAttribute("data-idprodotto", risultati[i].prodotto.id);
+                a.setAttribute("data-idprodotto", risultati[i].primo.id);
 
 				// assegno alla riga del prodotto la funzione per visualizzare e chiamare apriDettagli
-                a.onclick = function (e) {
+                a.onclick = function(e){
                     if( ( e.target.getAttribute("data-opened") === null ) || ( e.target.getAttribute("data-opened") === "false" ) ){
                         e.target.setAttribute("data-opened", true);
                         makeCall("GET", "visualizza?idProdotto=" + e.target.getAttribute("data-idprodotto"), null, function(risposta){
@@ -413,16 +413,16 @@
 
 			// nel div dei dettagli aggiungo il tag per l'immagine
             let img = document.createElement('img');
-            img.src = "immagine?idProdotto=" + dettagli.prodotto.id;
+            img.src = "immagine?idProdotto=" + dettagli.primo.id;
             div.appendChild(img);
 
 			// aggiungo i paragrafi per nome, descrizione e categoria
             let p1 = document.createElement('p');
             let p2 = document.createElement('p');
             let p3 = document.createElement('p');
-            p1.textContent = dettagli.prodotto.nome;
-            p2.textContent = dettagli.prodotto.descrizione;
-            p3.textContent = dettagli.prodotto.categoria;
+            p1.textContent = dettagli.primo.nome;
+            p2.textContent = dettagli.primo.descrizione;
+            p3.textContent = dettagli.primo.categoria;
             div.appendChild(p1);
             div.appendChild(p2);
             div.appendChild(p3);
@@ -446,40 +446,40 @@
             table.appendChild(tableBody);
 
 			// per ogni fornitore aggiungo una riga alla tabella
-            for( let i=0; i<dettagli.fornitoriConPrezzo.length; i++ ){
+            for( let i=0; i<dettagli.secondo.length; i++ ){
 				// prendo dai dettagli l'i-esimo fornitore e aggiungo una riga
-                let fornitoreConPrezzo = dettagli.fornitoriConPrezzo[i];
+                let coppiaFornitorePrezzo = dettagli.secondo[i];
                 let rigaFornitore = document.createElement('tr');
                 tableBody.appendChild(rigaFornitore);
 
 				// inserisco il nome
                 let tdNome = document.createElement('td');
                 rigaFornitore.appendChild(tdNome);
-                tdNome.textContent = fornitoreConPrezzo.fornitore.nome;
+                tdNome.textContent = coppiaFornitorePrezzo.primo.nome;
 
 				// inserisco la valutazione
                 let tdValutazione = document.createElement('td');
                 rigaFornitore.appendChild(tdValutazione);
-                tdValutazione.textContent = fornitoreConPrezzo.fornitore.valutazione + " / 5.0";
+                tdValutazione.textContent = coppiaFornitorePrezzo.primo.valutazione + " / 5.0";
 
 				// inserisco il prezzo
                 let tdPrezzo = document.createElement('td');
                 rigaFornitore.appendChild(tdPrezzo);
-                tdPrezzo.textContent = (fornitoreConPrezzo.prezzo).toFixed(2) + ' €';
+                tdPrezzo.textContent = (coppiaFornitorePrezzo.secondo.primo).toFixed(2) + ' €';
 	
 				// inserisco lo sconto
                 let tdSconto = document.createElement('td');
                 rigaFornitore.appendChild(tdSconto);
                 tdSconto.textContent = (fornitore.sconto * 100.00).toFixed(2) + ' %';
 
-				// inserisco le farie fasce per le spese di spedizione
+				// inserisco le varie fasce per le spese di spedizione
                 let tdFasceSpedizione = document.createElement('td');
                 rigaFornitore.appendChild(tdFasceSpedizione);
                 // come lista di fasce
                 let ul = document.createElement('ul');
                 tdFasceSpedizione.appendChild(ul);
                 // considerando per ogni fascia il caso in cui sia l'ultima fascia con max non definito
-                fornitoreConPrezzo.fornitore.fasceDiSpedizione.forEach( f => {
+                coppiaFornitorePrezzo.primo.fasceDiSpedizione.forEach( f => {
                     let li = document.createElement('li');
                     li.textContent = ( f.max == undefined ) ? "Da " + f.max + " articoli " + f.prezzo.toFixed(2) + " €" :
                         "Da " + f.min + " a " + f.max + " articoli " + f.prezzo.toFixed(2) + " €";
@@ -489,17 +489,17 @@
 				// inserisco la soglia
                 let tdSogliaSpedizione = document.createElement('td');
                 rigaFornitore.appendChild(tdSogliaSpedizione);
-                tdSogliaSpedizione.textContent = fornitoreConPrezzo.fornitore.soglia == undefined ? "Nessuna soglia di spesa per la spedizione gratuita" : fornitoreConPrezzo.fornitore.soglia.toFixed(2) + " €";
+                tdSogliaSpedizione.textContent = coppiaFornitorePrezzo.primo.soglia == undefined ? "Nessuna soglia di spesa per la spedizione gratuita" : coppiaFornitorePrezzo.primo.soglia.toFixed(2) + " €";
 
 				// preparo la colonna "già nel carrello" aggiungendo idfornitore e idprodotto come attributi
                 let tdNelCarrello = document.createElement('td');
                 rigaFornitore.appendChild(tdNelCarrello);
                 // aggiungendo idfornitore e idprodotto come attributi per questa cella
-                tdNelCarrello.setAttribute("data-idfornitore", fornitoreConPrezzo.fornitore.id);
-                tdNelCarrello.setAttribute("data-idprodotto", dettagli.prodotto.id);
+                tdNelCarrello.setAttribute("data-idfornitore", coppiaFornitorePrezzo.primo.id);
+                tdNelCarrello.setAttribute("data-idprodotto", dettagli.primo.id);
                 tdNelCarrello.textContent = "";
                 // e voglio che si apra myModal onmouseover
-                tdNelCarrello.onmouseover = function(e) {
+                tdNelCarrello.onmouseover = function(e){
                     openModal(e);
                 }
 
@@ -514,12 +514,11 @@
                 tdAggiungiAlCarrello.appendChild(inputQuantita);
 				// e il bottone per aggiungere al carrello
                 let btnAggiungi = document.createElement('button');
-                btnAggiungi.setAttribute('data-idfornitore', fornitoreConPrezzo.fornitore.id);
-                btnAggiungi.setAttribute('data-idprodotto', dettagli.prodotto.id);
+                btnAggiungi.setAttribute('data-idfornitore', coppiaFornitorePrezzo.primo.id);
+                btnAggiungi.setAttribute('data-idprodotto', dettagli.primo.id);
                 btnAggiungi.textContent = "Metti nel carrello!";
 				// impostando la funzione da attivare onclick
-                btnAggiungi.onclick = function (e)
-                {
+                btnAggiungi.onclick = function(e){
 					// prendo la quantità come parametro
                     let quantita = e.target.parentNode.querySelector('input').value;
                     // e controllo che sia un valore valido anche lato client
@@ -557,13 +556,13 @@
                 divDetails.forEach( node => {li.removeChild(node)})
         }
 
-		// metodo che prende il listino prezzi per aggiornare il risultato a seguito di un'aggiunta al carrello
+		// metodo che prende il listino per aggiornare il risultato a seguito di un'aggiunta al carrello
         this.aggiornaRisultati = function(){
 			// salvo this in self per colpa della visibilità di js
             const self = this;
             
             // faccio la chiamata a listinoPrezzi
-            makeCall("GET", "listinoPrezzi", null, function(risposta){
+            makeCall("GET", "listino", null, function(risposta){
                 if( risposta.readyState === XMLHttpRequest.DONE ){
                     switch (risposta.status) {
                         case 200: // ok
@@ -625,7 +624,7 @@
                     return;
                 }
                 // calcolo il numero totale di prodotti
-                let numeroArticoli = carrelloFornitore.prodotti.reduce(function(q, prodotto) {
+                let numeroArticoli = carrelloFornitore.prodotti.reduce(function(q, prodotto){
                     return q + prodotto.quantita;
                 }, 0);
 				// calcolo il totale in euro
@@ -633,10 +632,10 @@
                 for( let i=0; i<carrelloFornitore.prodotti.length; i++ ){
 					// prendo il prodotto i-esimo
                     let prodotto = carrelloFornitore.prodotti[i];
-                    // controllo che sia sul listino prezzi
-                    let prodottoInListino = listino.filter(x => ( x.idFornitore === idFornitore ) && ( x.idProdotto === idProdotto ) );
+                    // controllo che sia sul listino
+                    let prodottoInListino = listino.filter(x => ( x.primo === idProdotto ) && ( x.secondo === idFornitore ) );
                     if( prodottoInListino.length == 0 ){
-                        alert("Il prodotto nel carrello non è nel listino prezzi.\nVerrai riportato al login.");
+                        alert("Il prodotto nel carrello non è nel listino.\nVerrai riportato al login.");
                         logout();
                         return;
                     }
@@ -649,7 +648,7 @@
 
 		/* --- definisco la funzione che visualizza myModal (viene chiamata quando il mouse passa su una cella in Già nel carrello) --- */
 		
-        function openModal(e) {
+        function openModal(e){
 			// prendo myModal
             let modal = document.getElementById("myModal");
             
@@ -673,9 +672,9 @@
                     switch (risposta.status) {
                         case 200: // ok
                         	// prendo le info sul carrello
-                            let info;
+                            let infoCarrello;
                             try{
-                                info = JSON.parse(risposta.responseText);
+                                infoCarrello = JSON.parse(risposta.responseText);
                             } catch (e) {
                                 alert("Errore durante il parsing di JSON delle informazioni sul carrello: " + e);
                                 return;
@@ -693,7 +692,7 @@
 
 							// indico il nome del fornitore
                             let nome = document.createElement('h4');
-                            nome.textContent = info[0].nome;
+                            nome.textContent = infoCarrello[0].nome;
                             modal.appendChild(nome);
 
 							// e aggiungo la lista di prodotti
@@ -702,7 +701,7 @@
 
 							// appendo i prodotti alla lista
 							// (ricorda che info è un array in generale, se il carrello ha articoli di un solo fornitore è lungo 1)
-                            info[0].prodotti.forEach( p => {
+                            infoCarrello[0].prodotti.forEach( p => {
                                 let li = document.createElement('li');
                                 li.textContent = p.quantita + "x " + p.nome;
                                 list.appendChild(li);
@@ -735,7 +734,7 @@
         }
 
 		// metodo per chiudere myModal
-        function closeModal() {
+        function closeModal(){
             document.getElementById("myModal").style.display = "none";
         }
     }
@@ -747,7 +746,7 @@
         this.container = container;
 
 		// metodo che recupera le informazioni sul carrello
-        this.show = function (){
+        this.show = function(){
 			// salvo this in self per colpa della visibilità di js
             const self = this;
 
@@ -809,7 +808,7 @@
         }
 
 		// metodo che riempie effettivamente la pagina del carrello
-        this.riempiPaginaCarrello = function (risposta){
+        this.riempiPaginaCarrello = function(risposta){
 			// salvo this in self per colpa della visibilità di js
             const self = this;
 
@@ -849,7 +848,7 @@
                 btnOrdina.textContent = "Ordina";
                 btnOrdina.setAttribute('data-idfornitore', infoFornitore.id);
                 // specificando la funzione onclick
-                btnOrdina.onclick = function (e) {
+                btnOrdina.onclick = function(e){
 					// controllo che l'id del fornitore sia un intero
                     if( isNaN(e.target.getAttribute('data-idfornitore')) || !Number.isInteger(parseFloat(e.target.getAttribute("data-idfornitore"))) ){
                         alert("Valore dell'id non valido");
@@ -951,7 +950,7 @@
         }
 
 		// metodo che aggiunge un prodotto al carrello
-        this.aggiungiProdotto = function (idP, idF, q) {
+        this.aggiungiProdotto = function(idP, idF, q){
 
 			// prendo gli id e la quantita
             if( isNaN(idP) || isNaN(idF) || isNaN(q) || !Number.isInteger(parseFloat(idP)) || !Number.isInteger(parseFloat(idF)) || !Number.isInteger(parseFloat(q)) ){
@@ -1126,7 +1125,7 @@
         this.container = container;
 
 		// metodo che recupera gli ordini
-        this.show = function (){
+        this.show = function(){
 			// salvo this in self per colpa della visibilità di js
             const self = this;
 
@@ -1160,7 +1159,7 @@
         this.riempiPaginaOrdini = function(risposta){
             // prendo gli ordini
             let ordini;
-            try{
+            try {
                 ordini = JSON.parse(risposta.responseText);
             } catch (e) {
                 alert("Errore durante il parsing di JSON: " + e);
@@ -1250,15 +1249,15 @@
                     tbody.appendChild(rigaProdotto);
 					// aggiungo il nome alla riga
                     let tdNome = document.createElement('td');
-                    tdNome.textContent = p.nome;
+                    tdNome.textContent = p.secondo;
                     rigaProdotto.appendChild(tdNome);
 					// aggiungo il prezzo alla riga
                     let tdPrezzo = document.createElement('td');
-                    tdPrezzo.textContent = p.prezzoProdotto.toFixed(2) + " €";
+                    tdPrezzo.textContent = p.primo.prezzoProdotto.toFixed(2) + " €";
                     rigaProdotto.appendChild(tdPrezzo);
 					// aggiungo la quantita alla riga
                     let tdQuantita = document.createElement('td');
-                    tdQuantita.textContent = p.quantita;
+                    tdQuantita.textContent = p.primo.quantita;
                     rigaProdotto.appendChild(tdQuantita);
                 })
 
