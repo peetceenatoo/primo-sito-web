@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.UnavailableException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +32,7 @@ import it.polimi.tiw.DAO.DAO_Prodotto;
 import it.polimi.tiw.Utility.ConnectionInitializer;
 
 @WebServlet(value = "/ordini")
+@MultipartConfig
 public class Ordini extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private Connection connessione;
@@ -67,6 +69,7 @@ public class Ordini extends HttpServlet {
         risposta.setCharacterEncoding("UTF-8");
         risposta.getWriter().write(json);
     }
+    
     @Override
     protected void doPost(HttpServletRequest richiesta, HttpServletResponse risposta) throws IOException {
     	InfoCarrello data;

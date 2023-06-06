@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.servlet.UnavailableException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +16,6 @@ import com.google.gson.Gson;
 import it.polimi.tiw.Utility.ConnectionInitializer;
 
 @WebServlet(value="/askLogged")
-@MultipartConfig
 public class AskLogged extends HttpServlet {
 
     private static final long serialVersionUID = 1L;

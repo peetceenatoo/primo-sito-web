@@ -6,9 +6,7 @@ import it.polimi.tiw.Bean.Utente;
 import it.polimi.tiw.DAO.DAO_Utente;
 import it.polimi.tiw.Utility.ConnectionInitializer;
 
-import javax.servlet.ServletException;
 import javax.servlet.UnavailableException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +17,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 @WebServlet(value="/login")
-@MultipartConfig
 public class Login extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
