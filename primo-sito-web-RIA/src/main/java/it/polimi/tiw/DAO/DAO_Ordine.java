@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import it.polimi.tiw.Bean.Coppia;
 import it.polimi.tiw.Bean.DettaglioOrdine;
 import it.polimi.tiw.Bean.Ordine;
 import it.polimi.tiw.Bean.ProdottoDiUnFornitore;
@@ -44,22 +45,21 @@ public class DAO_Ordine{
         ordini = new ArrayList<>();
         // metto tutti gli ordini nel risultato
         while( resultSet.next() ){
-        	List<DettaglioOrdine> dettagli;
+        	List<Coppia<DettaglioOrdine, String>> dettagli;
         	
         	// imposto l'id dell'ordine corrente come parametro #1 della query 2
             statement2.setInt(1, resultSet.getInt("Id"));
             // pre-compila la query 1 se sintatticamente corretta
             ResultSet resultSet2 = statement2.executeQuery();
 
-            // controllo se esiste almeno un dettaglio per l'ordine corrente: non dovrebbe succedere
-            if( !resultSet2.isBeforeFirst() ) throw new SQLException("Errore: questo ordine risulta vuoto!");
-
             // istanzio la lista con i dettagli
             dettagli = new ArrayList<>();
+            
+            DAO_Prodotto daoProdotto = new DAO_Prodotto(connessione);
 
             // aggiungo tutti i dettagli dell'ordine corrente 
             while( resultSet2.next() )
-            	dettagli.add(new DettaglioOrdine(resultSet2.getInt("IdOrdine"), resultSet2.getInt("IdProdotto"), resultSet2.getDouble("PrezzoProdotto"), resultSet2.getInt("Quantita")));
+            	dettagli.add(new Coppia<DettaglioOrdine,String>(new DettaglioOrdine(resultSet2.getInt("IdOrdine"), resultSet2.getInt("IdProdotto"), resultSet2.getDouble("PrezzoProdotto"), resultSet2.getInt("Quantita")), daoProdotto.getProdotto(resultSet2.getInt("IdProdotto")).nome()));
             
             // salvo la data di spedizione dell'ordine corrente
             Date data = resultSet.getDate("DataSpedizione");
