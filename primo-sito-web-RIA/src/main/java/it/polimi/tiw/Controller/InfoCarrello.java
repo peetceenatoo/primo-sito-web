@@ -9,31 +9,29 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
+import it.polimi.tiw.Bean.CarrelloFornitore;
 import it.polimi.tiw.Bean.Fornitore;
-import it.polimi.tiw.Bean.InfoCarrello;
-import it.polimi.tiw.Bean.ProdottoInfoCarrello;
+import it.polimi.tiw.Bean.InfoCarrelloFornitore;
+import it.polimi.tiw.Bean.InfoProdottoCarrello;
+import it.polimi.tiw.Bean.ProdottoCarrello;
 import it.polimi.tiw.DAO.DAO_Fornitore;
 import it.polimi.tiw.DAO.DAO_Prodotto;
 import it.polimi.tiw.Utility.ConnectionInitializer;
 
-import java.awt.print.PageFormat;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @WebServlet(value = "/infoCarrello")
 @MultipartConfig
-public class GetInfoCarrello extends HttpServlet {
+public class InfoCarrello extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private Connection connessione;
@@ -43,7 +41,7 @@ public class GetInfoCarrello extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest richiesta, HttpServletResponse risposta) throws ServletException, IOException {
-    	List<InfoCarrello> carrello;
+    	List<CarrelloFornitore> carrello;
     	
     	// imposto la codifica per leggere i parametri, coerentemente all'HTML
         richiesta.setCharacterEncoding("UTF-8");
@@ -60,9 +58,8 @@ public class GetInfoCarrello extends HttpServlet {
         Gson gson = new Gson();
         
         // prendo il token della classe da ritornare
-        Type typeToken = new TypeToken<List<InfoCarrello>>(){}.getType();
-
-        // converto da JSON
+        Type typeToken = new TypeToken<List<CarrelloFornitore>>(){}.getType();
+        // e converto da JSON
         try {
             carrello = gson.fromJson(requestBody, typeToken);
         } catch (JsonSyntaxException e) {
@@ -74,10 +71,10 @@ public class GetInfoCarrello extends HttpServlet {
         DAO_Fornitore daoFornitore = new DAO_Fornitore(connessione);
         DAO_Prodotto daoProdotto = new DAO_Prodotto(connessione);
 
-        // leggo il carrello come JsonArray
-        JsonArray risultato = new JsonArray();
+        // leggo il carrello come ArrayList<InfoCarrelloDiUnFornitore>
+        ArrayList<InfoCarrelloFornitore> info = new ArrayList<InfoCarrelloFornitore>();
         try {
-            for( InfoCarrello carrelloFornitore : carrello ){
+            for( CarrelloFornitore carrelloFornitore : carrello ){
             	// se non ci sono prodotti ritorno un errore
                 if( carrelloFornitore.prodotti().size() == 0 ){
                     risposta.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -85,7 +82,7 @@ public class GetInfoCarrello extends HttpServlet {
                 }
                 
                 // controllo che tutti i prodotti siano forniti dal fornitore
-                for( ProdottoInfoCarrello prod : carrelloFornitore.prodotti() ){
+                for( ProdottoCarrello prod : carrelloFornitore.prodotti() ){
                     try {
                         if( ( prod == null ) || !daoProdotto.isFornitoDaFornitore(prod.idProdotto(), carrelloFornitore.idFornitore()) ){
                             risposta.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -104,27 +101,21 @@ public class GetInfoCarrello extends HttpServlet {
                     return;
                 }
                 
-                // prendo l'InfoCarrello come JsonObject
-                JsonObject temp = new JsonObject();
-                temp.addProperty("id", f.id());
-                temp.addProperty("nome", f.nome());
-
-                // prendo i prodotti come JsonArray
-                JsonArray prodotti = new JsonArray();
-                for( ProdottoInfoCarrello prodotto : carrelloFornitore.prodotti() ){
+                // prendo la lista di info sui prodotti come ArrayList<InfoProdottoCarrello>
+                ArrayList<InfoProdottoCarrello> prodotti = new ArrayList<InfoProdottoCarrello>();
+                for( ProdottoCarrello prodotto : carrelloFornitore.prodotti() ){
                 	// prendo il prezzo a cui è venduto il prodotto corrente dal fornitore corrente
                     Double prezzo = daoProdotto.getPrezzoScontato(prodotto.idProdotto(), f.id());
-                    // leggo il prodotto come JsonObject
-                    JsonObject prod = new JsonObject();
-                    prod.addProperty("id", prodotto.idProdotto());
-                    prod.addProperty("nome", daoProdotto.getProdotto(prodotto.idProdotto()).nome());
-                    prod.addProperty("prezzo", prezzo);
-                    prod.addProperty("quantita", prodotto.quantita());
+                    // leggo il prodotto come InfoProdottoCarrello
+                    InfoProdottoCarrello prod = new InfoProdottoCarrello(prodotto.idProdotto(), daoProdotto.getProdotto(prodotto.idProdotto()).nome(), prezzo, prodotto.quantita() );
                     prodotti.add(prod);
                 }
-                // aggiungo il JsonArray di prodotti al JsonArray da ritornare
-                temp.add("prodotti", prodotti);
-                risultato.add(temp);
+                
+                // creo le info sul carrello del fornitore
+                InfoCarrelloFornitore carrelloF = new InfoCarrelloFornitore(f.id(), f.nome(), prodotti);
+                
+                // aggiungo le info sulla parte di carrello del fornitore corrente
+                info.add(carrelloF);
             }
         } catch (SQLException e) {
             risposta.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -132,7 +123,7 @@ public class GetInfoCarrello extends HttpServlet {
         }
         
         // scrivo la stringa in json
-        String json = gson.toJson(risultato);
+        String json = gson.toJson(info);
         // ritorno il risultato
         risposta.setStatus(HttpServletResponse.SC_OK);
         risposta.setContentType("application/json");
