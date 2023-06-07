@@ -4,10 +4,9 @@
 	// esplicito l'hoisting
 	var form;
 	
-	// se sono loggato voglio essere su home-page.html
-	if( sessionStorage.getItem("utente") !== null )
+	if( localStorage.getItem("utente") != null )
         window.location.href = "home-page.html";
-        
+
     document.getElementById("errormessage").style.display = "none";
 
 	// prendo l'id del form di login
@@ -24,7 +23,7 @@
                 if ( risposta.readyState == XMLHttpRequest.DONE ) {
                     switch( risposta.status ){
                         case 200: // ok
-                        	sessionStorage.setItem("utente", risposta.responseText);
+                        	localStorage.setItem("utente", risposta.responseText);
                             window.location.href = "home-page.html";
                             break;
                         case 400: // bad request

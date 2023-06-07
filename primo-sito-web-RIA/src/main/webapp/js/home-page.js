@@ -1,10 +1,10 @@
 {
 	/************************************************************************************/
 	
-	// se non sono loggato esco
-	if( sessionStorage.getItem("utente") == null )
+	// se sono sloggato, torno a login.html
+	if( localStorage.getItem("utente") == null )
         logout();
-    
+
 	/************************************************************************************/
 	
 	// dichiaro il pageOrchestrator e le variabili che conterranno i componenti della pagina
@@ -16,7 +16,7 @@
 	// se quando la pagina carica per la prima volta non sono loggato chiamo logout, altrimenti visualizzo la home
 	window.addEventListener('load', function(){
 			pageOrchestrator.start();
-            if( sessionStorage.getItem("utente") == null )
+            if( localStorage.getItem("utente") == null )
         		logout()
     		else
         		start();
@@ -28,7 +28,7 @@
     function logout(){
         makeCall("POST", 'logout', null, function(risposta){
         	if( risposta.readyState === XMLHttpRequest.DONE ){
-                sessionStorage.clear();
+                localStorage.clear();
                 window.location.href = "login.html";
             }
         } );
@@ -95,7 +95,7 @@
 		// mostro la home
         this.showHome = function(){
             this.hide();
-            if( sessionStorage.getItem("utente") == null )
+            if( localStorage.getItem("utente") == null )
         		logout();
         	else
         		home.show();
@@ -104,7 +104,7 @@
 		// mostro il carrello
         this.showCarrello = function(){
             this.hide();
-            if( sessionStorage.getItem("utente") == null )
+            if( localStorage.getItem("utente") == null )
         		logout();
         	else
         		carrello.show();
@@ -113,7 +113,7 @@
 		// mostro gli ordini
         this.showOrdini = function(){
             this.hide();
-            if( sessionStorage.getItem("utente") == null )
+            if( localStorage.getItem("utente") == null )
         		logout();
         	else
         		ordini.show();
@@ -159,7 +159,7 @@
                             self.showUltimiVisualizzati(risposta);
                             break;
                         case 401: // unauthorized
-                            alert("Non sei loggato.\nVerrai riportato al login.");
+                            alert("Non sei loggato.\nVerrai riportato al login.\n");
                             logout();
                             break;
                         case 500: // server error
@@ -184,14 +184,14 @@
             try{
                 prodotti = JSON.parse(risposta.responseText);
             } catch(e) {
-                alert("Errore durante il parsing di JSON: " + e);
+                alert("Errore lato client durante il parsing di JSON dei prodotti forniti dal server: " + e);
                 return;
             }
 			
 			// se non ce ne sono, scrivo che non ci sono prodotti da mostrare
             if( prodotti.length == 0 ){
                 let noProdottih2 = document.createElement('h2');
-                h2NoProd.textContent="Non ci sono prodotti da mostrare.";
+                h2NoProd.textContent = "Non ci sono prodotti da mostrare.";
                 this.container.appendChild(noProdottih2);
             }
             // 
@@ -222,10 +222,6 @@
                     let cardBody = document.createElement('div');
                     cardBody.classList.add("card-body");
                     card.appendChild(cardBody);
-                    // con Id
-                    let idParag = document.createElement('p');
-                    idParag.textContent = "Id: " + prodotti[i].id;
-                    cardBody.appendChild(idParag);
                     // e nome
                     let nomeParag = document.createElement('p');
                     nomeParag.textContent = "Nome Prodotto: " + prodotti[i].nome;
@@ -268,7 +264,7 @@
                                 self.showRisultati(risposta);
                                 break;
                             case 400: // bad request
-                            	alert("Parametro non valido.\n Verrai riportato alla home.");
+                            	alert("Parametro non valido, rifiutato dal server.\nVerrai riportato alla home.");
                                 pageOrchestrator.hide();
                                 pageOrchestrator.showHome();
                                 break;
@@ -277,7 +273,7 @@
                                 logout();
                                 break;
                             case 500: // server error
-                                alert("Errore nel server.\n Verrai riportato alla home.");
+                                alert("Errore nel server.\nVerrai riportato alla home.");
                                 pageOrchestrator.hide();
                                 pageOrchestrator.showHome();
                                 break;
@@ -300,7 +296,7 @@
             try {
                 risultati = JSON.parse(risposta.responseText);
             } catch(e) {
-                alert("Errore durante il parsing di JSON: " + e);
+                alert("Errore lato client durante il parsing di JSON dei risultati forniti dal server: " + e);
                 return;
             }
 			
@@ -343,7 +339,7 @@
                                         self.apriDettagli(e.target.parentNode, risposta);
                                         break;
                                     case 400: // bad request
-										alert("Parametro non valido.\nVerrai riportato alla home.");
+										alert("Parametro non valido, rifiutato dal server.\nVerrai riportato alla home.");
                                         pageOrchestrator.hide();
                                         pageOrchestrator.showHome();
                                         break;
@@ -398,7 +394,7 @@
             try{
                 dettagli = JSON.parse(risposta.responseText);
             } catch(e) {
-                alert("Errore durante il parsing di JSON dei dettagli: " + e);
+                alert("Errore lato client durante il parsing di JSON dei dettagli forniti dal server: " + e);
                 return;
             }
 
@@ -465,7 +461,7 @@
 				// inserisco lo sconto
                 let tdSconto = document.createElement('td');
                 rigaFornitore.appendChild(tdSconto);
-                tdSconto.textContent = (fornitore.sconto * 100.00).toFixed(2) + ' %';
+                tdSconto.textContent = (coppiaFornitorePrezzo.secondo.secondo * 100.00).toFixed(2) + ' %';
 
 				// inserisco le varie fasce per le spese di spedizione
                 let tdFasceSpedizione = document.createElement('td');
@@ -476,7 +472,7 @@
                 // considerando per ogni fascia il caso in cui sia l'ultima fascia con max non definito
                 coppiaFornitorePrezzo.primo.fasceDiSpedizione.forEach( f => {
                     let li = document.createElement('li');
-                    li.textContent = ( f.max == undefined ) ? "Da " + f.max + " articoli " + f.prezzo.toFixed(2) + " €" :
+                    li.textContent = ( f.max == undefined ) ? "Da " + f.min + " articoli " + f.prezzo.toFixed(2) + " €" :
                         "Da " + f.min + " a " + f.max + " articoli " + f.prezzo.toFixed(2) + " €";
                     ul.appendChild(li);
                 })
@@ -518,14 +514,14 @@
                     let quantita = e.target.parentNode.querySelector('input').value;
                     // e controllo che sia un valore valido anche lato client
                     if( isNaN(quantita) || ( quantita <= 0 ) || !Number.isInteger(parseFloat(quantita)) ){
-                        alert("Valore quantità non valido.")
+                        alert("Valore quantità non valido.\nIl controllo è avvenuto lato client.")
                         return;
                     }
                     let idProdotto = e.target.getAttribute('data-idprodotto');
                     let idFornitore = e.target.getAttribute('data-idfornitore');
 					// controllo anche che gli id siano numeri interi anche lato client
                     if( isNaN(idProdotto) || isNaN(idFornitore) || !Number.isInteger(parseFloat(idProdotto)) || !Number.isInteger(parseFloat(idFornitore)) ){
-                        alert("Valore di almeno un id non valido");
+                        alert("Valore di uno dei due id non valido.\nIl controllo è avvenuto lato client.");
                         return;
                     }
 					
@@ -590,7 +586,7 @@
             try{
                 listino = JSON.parse(risposta.responseText);
             } catch(e) {
-                alert("Errore durante il parsing di JSON del listino prezzi: " + e);
+                alert("Errore lato client durante il parsing di JSON del listino prezzi fornito dal server: " + e);
                 return;
             }
 
@@ -603,9 +599,7 @@
                 let sAttr2 = td.getAttribute("data-idprodotto");
                 // controllo che gli id siano interi anche lato client
                 if( isNaN(sAttr1) || isNaN(sAttr2) || !Number.isInteger(parseFloat(sAttr1)) || !Number.isInteger(parseFloat(sAttr2)) ){
-                    alert("Valore di un almeno un id non valido.\nVerrai riportato alla home.");
-                    pageOrchestrator.hide();
-                    pageOrchestrator.showHome();
+                    alert("Valore di almeno un id non valido.\nIl controllo è avvenuto lato client.");
                     return;
                 }
                 // li leggo come interi effettivamente
@@ -615,26 +609,27 @@
 				// prendo la parte di carrello associata al fornitore corrente
                 let carrelloFornitore = carrello.getCarrelloFornitore(idFornitore);
                 if( carrelloFornitore == undefined ){
-                    td.textContent = "Nessun prodotto di questo fornitore nel carrello";
+                    td.textContent = "Nessun prodotto di questo fornitore nel carrello.";
                     return;
                 }
                 // calcolo il numero totale di prodotti
                 let numeroArticoli = carrelloFornitore.prodotti.reduce(function(q, prodotto){
                     return q + prodotto.quantita;
                 }, 0);
-				// calcolo il totale in euro
+				// calcolo il valore totale in euro
                 let totale = 0;
                 for( let i=0; i<carrelloFornitore.prodotti.length; i++ ){
 					// prendo il prodotto i-esimo
                     let prodotto = carrelloFornitore.prodotti[i];
                     // controllo che sia sul listino
-                    let prodottoInListino = listino.filter(x => ( x.primo === idProdotto ) && ( x.secondo === idFornitore ) );
+                    let prodottoInListino = listino.filter((prod) => ( prod.idProdotto === idProdotto ) && ( prod.idFornitore === idFornitore ));
                     if( prodottoInListino.length == 0 ){
-                        alert("Il prodotto nel carrello non è nel listino.\nVerrai riportato al login.");
+                        alert("Un prodotto presente nel carrello non è nel listino fornito dal server.\nIl carrello verrà cancellato e tu verrai riportato al login.");
+                        localStorage.removeItem("carrello");
                         logout();
                         return;
                     }
-                    totale += prodotto.quantita * prodottoInListino[0].prezzo;
+                    totale += prodotto.quantita * prodottoInListino[0].prezzoScontato;
                 }
                 // aggiungo il contenuto nella cella corrente
                 td.textContent = numeroArticoli + " articoli di questo fornitore nel carrello, per un valore di " + totale.toFixed(2) + " €";
@@ -656,22 +651,21 @@
             
             // prendo la parte di carrello associata al fornitore corrente
             let carrelloFornitore = carrello.getCarrelloFornitore(e.target.getAttribute("data-idfornitore"));
-            if( carrelloFornitore == null ){
+            if( carrelloFornitore == null )
                 return;
-            }
-            
+                        
             // faccio richiesta a infoCarrello mandando la suddetta parte di carrello come JSON
             let string = "[" + JSON.stringify(carrelloFornitore) + "]";
             postJsonData("infoCarrello", string, function(risposta){
                 if( risposta.readyState === XMLHttpRequest.DONE ){
-                    switch (risposta.status) {
+                    switch( risposta.status ){
                         case 200: // ok
                         	// prendo le info sul carrello
                             let infoCarrello;
                             try{
                                 infoCarrello = JSON.parse(risposta.responseText);
                             } catch (e) {
-                                alert("Errore durante il parsing di JSON delle informazioni sul carrello: " + e);
+                                alert("Errore lato client durante il parsing di JSON delle informazioni sul carrello fornite dal server: " + e);
                                 return;
                             }
                             
@@ -687,6 +681,7 @@
 
 							// indico il nome del fornitore
                             let nome = document.createElement('h4');
+                            console.log(infoCarrello[0].nome);
                             nome.textContent = infoCarrello[0].nome;
                             modal.appendChild(nome);
 
@@ -704,7 +699,8 @@
 
                             break;
                         case 400: // bad request
-							alert("Parametro invalido.\nVerrai riportato alla home.")
+							alert("Carrello non valido, rifiutato dal server.\nIl carrello verrà cancellato e tu verrai riportato alla home.")
+                            localStorage.removeItem("carrello");
                             pageOrchestrator.hide();
                             pageOrchestrator.showHome();
                             break;                	
@@ -758,10 +754,10 @@
             // prendo il carrello
             let carrello;
             try {
-                carrello = JSON.parse(sessionStorage.getItem("carrello"));
+                carrello = JSON.parse(localStorage.getItem("carrello"));
             } catch (e) {
-                alert("Errore durante il parsing di JSON del carrello.\nIl carrello verrà cancellato e tu verrai riportato alla home.");
-                sessionStorage.removeItem("carrello");
+                alert("Errore durante il parsing di JSON del carrello.\nIl carrello verrà cancellato e tu verrai riportato alla home.\nIl controllo è avvenuto lato client.");
+                localStorage.removeItem("carrello");
                 pageOrchestrator.hide();
                 pageOrchestrator.showHome();
                 return ;
@@ -783,7 +779,8 @@
                             self.riempiPaginaCarrello(risposta);
                             break;
                         case 400: // bad request
-							alert("Parametro invalido.\nVerrai riportato alla home.")
+							alert("Carrello non valido, rifiutato dal server.\nIl carrello verrà cancellato e tu verrai riportato alla home.")
+                            localStorage.removeItem("carrello");
                             pageOrchestrator.hide();
                             pageOrchestrator.showHome();
                             break;                	
@@ -814,10 +811,10 @@
 
 			// prendo le informazioni del carrello
 			let infoCarrello;
-            try{
+            try {
                	infoCarrello = JSON.parse(risposta.responseText);
             } catch(e) {
-                alert("Errore durante il parsing di JSON: " + e);
+                alert("Errore lato client durante il parsing di JSON delle informazioni sul carrello fornite dal server: " + e);
                 return;
             }
 
@@ -851,13 +848,11 @@
                 btnOrdina.onclick = function(e){
 					// controllo che l'id del fornitore sia un intero
                     if( isNaN(e.target.getAttribute('data-idfornitore')) || !Number.isInteger(parseFloat(e.target.getAttribute("data-idfornitore"))) ){
-                        alert("Valore dell'id non valido");
-                        pageOrchestrator.hide();
-                        pageOrchestrator.showCart();
+                        alert("Valore dell'id del fornitore non valido.\nControllo avvenuto lato client.");
                         return;
                     }
                     // mando l'ordine per quel fornitore
-                    self.sendOrder(e.target.getAttribute('data-idfornitore'))
+                    self.inviaOrdine(e.target.getAttribute('data-idfornitore'))
                 }
                 divHeading.appendChild(btnOrdina);
 
@@ -868,7 +863,7 @@
                 
                 // aggiungo la tabella con le informazioni per ogni fornitore
 	            let table = document.createElement('table');
-	            div.appendChild(table);
+	            li.appendChild(table);
 	            table.classList.add('order-table');
 	            let tableHead = document.createElement('thead');
 	            table.appendChild(tableHead);
@@ -889,7 +884,7 @@
                 infoFornitore.prodotti.forEach( (p) => {
 					// creo la riga
                     let riga = document.createElement('tr');
-                    tbody.appendChild(riga);
+                    tableBody.appendChild(riga);
 					// aggiungo il nome del prodotto
                     let tdNome = document.createElement('td');
                     riga.appendChild(tdNome);
@@ -917,7 +912,7 @@
         this.getCarrelloFornitore = function(id){
 			// controllo se l'id è valido anche lato client
             if( isNaN(id) || !Number.isInteger(parseFloat(id)) ){
-                alert("Parametro non valido.");
+                alert("Valore dell'id del fornitore di cui è richiesto il carrello non valido.\nErrore avvenuto lato client.");
                 return ;
             }
 			// prendo l'id come intero
@@ -926,10 +921,10 @@
             // prendo il carrello
             let carrello;
             try {
-                carrello = JSON.parse(sessionStorage.getItem("carrello"));
+                carrello = JSON.parse(localStorage.getItem("carrello"));
             } catch (e) {
                 alert("Errore durante il parsing di JSON del carrello.\nIl carrello verrà cancellato e tu verrai riportato alla home.");
-                sessionStorage.removeItem("carrello");
+                localStorage.removeItem("carrello");
                 pageOrchestrator.hide();
                 pageOrchestrator.showHome();
                 return ;
@@ -954,7 +949,7 @@
 
 			// prendo gli id e la quantita
             if( isNaN(idP) || isNaN(idF) || isNaN(q) || !Number.isInteger(parseFloat(idP)) || !Number.isInteger(parseFloat(idF)) || !Number.isInteger(parseFloat(q)) ){
-                alert("Valore di almeno uno tra gli id e la quantità non valido");
+                alert("Valore di almeno uno tra i due id e la quantità non valido.\nControllo avvenuto lato client.");
                 return;
             }
             let idProdotto = parseInt(idP);
@@ -964,10 +959,10 @@
             // prendo il carrello
             let carrello;
             try {
-                carrello = JSON.parse(sessionStorage.getItem("carrello"));
+                carrello = JSON.parse(localStorage.getItem("carrello"));
             } catch (e) {
                 alert("Errore durante il parsing di JSON del carrello.\nIl carrello verrà cancellato e tu verrai riportato alla home.");
-                sessionStorage.removeItem("carrello");
+                localStorage.removeItem("carrello");
                 pageOrchestrator.hide();
                 pageOrchestrator.showHome();
                 return ;
@@ -1020,7 +1015,7 @@
 
             }
 			// aggiorno il carrello
-            sessionStorage.setItem("carrello", JSON.stringify(carrello));
+            localStorage.setItem("carrello", JSON.stringify(carrello));
         }
 
 		// metodo che invia un nuovo ordine
@@ -1030,18 +1025,18 @@
             
             // prendo l'id del fornitore
             if( isNaN(id) ){
-                alert("Valore dell'id del fornitore non valido.");
+                alert("Valore dell'id del fornitore non valido.\nControllo avvenuto lato client.");
                 return;
             }
-            let idFornitore = parseInt(idF);
+            let idFornitore = parseInt(id);
 
 			// prendo il carrello
             let carrello;
             try {
-                carrello = JSON.parse(sessionStorage.getItem("carrello"));
+                carrello = JSON.parse(localStorage.getItem("carrello"));
             } catch (e) {
                 alert("Errore durante il parsing di JSON del carrello.\nIl carrello verrà cancellato e tu verrai riportato alla home.");
-                sessionStorage.removeItem("carrello");
+                localStorage.removeItem("carrello");
                 pageOrchestrator.hide();
                 pageOrchestrator.showHome();
                 return ;
@@ -1050,18 +1045,18 @@
 			// prendo la parte di carrello del fornitore richiesto
             let carrelloFornitore = carrello.filter(o => o.idFornitore === idFornitore)[0];
             if( carrelloFornitore == undefined ){
-                alert("Valore dell'id del fornitore non valido.");
+                alert("Valore dell'id del fornitore non presente nel carrello.\nControllo avvenuto lato client.");
                 return;
             }
             if( ( carrelloFornitore.prodotti == null ) || ( Object.keys(carrelloFornitore.prodotti).length == 0 ) || ( carrelloFornitore.prodotti.length == 0 ) ){
-                alert("Valore dell'id del fornitore non valido.");
+                alert("Valore dell'id del fornitore non ha prodotti associati nel carrello.\nControllo avvenuto lato client.");
                 carrello = carrello.filter(o => o.idFornitore != idFornitore);
-                sessionStorage.setItem(JSON.stringify(carrello));
+                localStorage.setItem(JSON.stringify(carrello));
                 return;
             }
 
 			// creo l'ordine
-            postJsonData("ordini", fornitore, function(risposta){
+            postJsonData("ordini", carrelloFornitore, function(risposta){
                 if( risposta.readyState === XMLHttpRequest.DONE ){
                     switch(risposta.status){
                         case 200: // ok
@@ -1094,8 +1089,8 @@
 			
 			// prendo l'id del fornitore
             if( isNaN(idF) || !Number.isInteger(parseFloat(idF)) ){
-                alert("Valore dell'id del fornitore non valido. Il carrello verrà cancellato e tu verrai riportato alla home.");
-                sessionStorage.removeItem("carrello");
+                alert("Valore dell'id del fornitore non valido.\nIl carrello verrà cancellato e tu verrai riportato alla home.");
+                localStorage.removeItem("carrello");
                 pageOrchestrator.hide();
                 pageOrchestrator.showHome();
             }
@@ -1104,10 +1099,10 @@
 			// prendo il carrello
             let carrello;
             try {
-                carrello = JSON.parse(sessionStorage.getItem("carrello"));
+                carrello = JSON.parse(localStorage.getItem("carrello"));
             } catch (e) {
                 alert("Errore durante il parsing di JSON del carrello.\nIl carrello verrà cancellato e tu verrai riportato alla home.");
-                sessionStorage.removeItem("carrello");
+                localStorage.removeItem("carrello");
                 pageOrchestrator.hide();
                 pageOrchestrator.showHome();
                 return ;
@@ -1115,7 +1110,7 @@
 
 			// tolgo dal carrello i prodotti del fornitore da rimuovere
             carrello = carrello.filter(x => x.idFornitore != idFornitore);
-            sessionStorage.setItem("carrello", JSON.stringify(carrello));
+            localStorage.setItem("carrello", JSON.stringify(carrello));
         }
     }
     
@@ -1167,7 +1162,7 @@
             try {
                 ordini = JSON.parse(risposta.responseText);
             } catch (e) {
-                alert("Errore durante il parsing di JSON: " + e);
+                alert("Errore lato client durante il parsing di JSON degli ordini forniti dal server: " + e);
                 return;
             }
             
@@ -1232,7 +1227,7 @@
                 li.appendChild(titoloProdotti);
 				// e aggiungo la tabella con le informazioni per ogni prodotto
 	            let table = document.createElement('table');
-	            div.appendChild(table);
+	            li.appendChild(table);
 	            let tableHead = document.createElement('thead');
 	            table.appendChild(tableHead);
 	            let tableHeaderRow = document.createElement('tr');
@@ -1251,7 +1246,7 @@
                 o.dettagli.forEach( (p) => {
 					// aggiungo una riga alla tabella
                     let rigaProdotto = document.createElement('tr');
-                    tbody.appendChild(rigaProdotto);
+                    tableBody.appendChild(rigaProdotto);
 					// aggiungo il nome alla riga
                     let tdNome = document.createElement('td');
                     tdNome.textContent = p.secondo;
