@@ -18,7 +18,7 @@ public class DAO_Utente {
 
     public boolean isRegistrato(String email) throws SQLException {
         // prendo la mail
-    	String query = "SELECT Email FROM UTENTE WHERE Email = ?";
+    	String query = "SELECT Email FROM UTENTE WHERE BINARY Email = ?";
     	
     	// pre-compila la query 1 se sintatticamente corretta
         PreparedStatement statement = connessione.prepareStatement(query);
@@ -34,7 +34,7 @@ public class DAO_Utente {
     public Utente getUtenteConPassword(String email, String password) throws SQLException {
     	
     	// prendo l'utente dal database
-        String query = "SELECT * FROM UTENTE WHERE Email = ? AND Password = ?";
+        String query = "SELECT * FROM UTENTE WHERE BINARY Email = ? AND BINARY Password = ?";
         
         // pre-compila la query 1 se sintatticamente corretta
         PreparedStatement statement = connessione.prepareStatement(query);
