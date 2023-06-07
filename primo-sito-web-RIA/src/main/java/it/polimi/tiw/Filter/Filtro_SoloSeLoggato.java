@@ -10,7 +10,7 @@ import java.io.IOException;
 
 import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 
-@WebFilter(urlPatterns = {"/ultimiVisualizzati", "/carrello", "/ordini", "/listinoPrezzi", "/risultati", "/visualizza", "/logout", "/infoCarrello", "/immagine", "/home-page.html", "/js/home-page.js"})
+@WebFilter(urlPatterns = {"/ultimiVisualizzati", "/carrello", "/ordini", "/listinoPrezzi", "/risultati", "/visualizza", "/logout", "/infoCarrello", "/immagine"})
 public class Filtro_SoloSeLoggato implements Filter {
 
     @Override

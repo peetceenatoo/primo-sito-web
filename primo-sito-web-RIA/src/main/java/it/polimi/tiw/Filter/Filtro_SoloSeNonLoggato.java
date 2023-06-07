@@ -9,7 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-@WebFilter(urlPatterns = {"/login", "/login.html", "/js/login.js"})
+@WebFilter(urlPatterns = {"/login"})
 public class Filtro_SoloSeNonLoggato implements Filter {
 
         @Override
@@ -25,7 +25,7 @@ public class Filtro_SoloSeNonLoggato implements Filter {
             
             // se la sessione per l'utente non è attiva, ritorno un errore
             if ( !sessione.isNew() && ( sessione.getAttribute("utente") != null ) ){
-                ((HttpServletResponse)risposta).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                ((HttpServletResponse)risposta).sendRedirect(richiestaHTTP.getContextPath() +"/login.html");
                 return;
             }
             

@@ -36,8 +36,8 @@ public class FiltroDefault_SeNonLoggato implements Filter {
         		return;
         	}
         }
-        // altrimenti 404
-        if( ( richiestaHTTP.getPathInfo() != "/css/stylesheet.css" ) && ( richiestaHTTP.getPathInfo() != "/js/utils.js" ) ){
+        // altrimenti, se non sto scaricando un file statico pubblico, mando 404
+        if( ( richiestaHTTP.getPathInfo() != "/css/stylesheet.css" ) && ( richiestaHTTP.getPathInfo() != "/js/utils.js" ) && ( richiestaHTTP.getPathInfo() != "/js/login.js" ) && ( richiestaHTTP.getPathInfo() != "/js/home-page.js" ) && ( richiestaHTTP.getPathInfo() != "/home-page.html" ) && ( richiestaHTTP.getPathInfo() != "/login.html" )){
         	((HttpServletResponse) risposta).setStatus(HttpServletResponse.SC_NOT_FOUND);
         	return;
         }
