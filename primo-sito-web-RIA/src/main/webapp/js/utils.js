@@ -31,7 +31,7 @@ function postJsonData(url, obj, callback, toBeStringified = true) {
     
     // definisco la callback da eseguire al termine della richiesta
     richiesta.onreadystatechange = function() {
-        callback(req)
+        callback(richiesta)
     };
     
     // inizializzo la richiesta
@@ -43,6 +43,7 @@ function postJsonData(url, obj, callback, toBeStringified = true) {
 	// invio la richiesta
     if( toBeStringified )
     	richiesta.send(JSON.stringify(obj));
-    richiesta.send(obj);
+    else
+    	richiesta.send(obj);
 }
 
