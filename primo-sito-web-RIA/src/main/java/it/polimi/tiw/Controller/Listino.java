@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 
 import it.polimi.tiw.Bean.Coppia;
+import it.polimi.tiw.Bean.ProdottoDiUnFornitore;
 import it.polimi.tiw.DAO.DAO_Prodotto;
 import it.polimi.tiw.Utility.ConnectionInitializer;
 
@@ -34,7 +35,7 @@ public class Listino extends HttpServlet {
         DAO_Prodotto daoProdotto = new DAO_Prodotto(connessione);
         
         // prendo il listino
-        List<Coppia<Integer,Integer>> listino;
+        List<ProdottoDiUnFornitore> listino;
         try{
             listino = daoProdotto.getListino();
         } catch (SQLException e ) {

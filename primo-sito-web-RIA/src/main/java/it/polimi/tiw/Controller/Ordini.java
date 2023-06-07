@@ -20,11 +20,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
+import it.polimi.tiw.Bean.CarrelloFornitore;
 import it.polimi.tiw.Bean.Fornitore;
-import it.polimi.tiw.Bean.InfoCarrello;
 import it.polimi.tiw.Bean.Ordine;
 import it.polimi.tiw.Bean.ProdottoDiUnFornitore;
-import it.polimi.tiw.Bean.ProdottoInfoCarrello;
+import it.polimi.tiw.Bean.ProdottoCarrello;
 import it.polimi.tiw.Bean.Utente;
 import it.polimi.tiw.DAO.DAO_Fornitore;
 import it.polimi.tiw.DAO.DAO_Ordine;
@@ -72,7 +72,7 @@ public class Ordini extends HttpServlet {
     
     @Override
     protected void doPost(HttpServletRequest richiesta, HttpServletResponse risposta) throws IOException {
-    	InfoCarrello data;
+    	CarrelloFornitore data;
     	
     	// imposto la codifica per leggere i parametri, coerentemente all'HTML
         richiesta.setCharacterEncoding("UTF-8");
@@ -89,7 +89,7 @@ public class Ordini extends HttpServlet {
         Gson gson = new Gson();
         // converto da JSON
         try {
-           data = gson.fromJson(corpo, InfoCarrello.class);
+           data = gson.fromJson(corpo, CarrelloFornitore.class);
         } catch (JsonSyntaxException e) {
             risposta.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
@@ -113,7 +113,7 @@ public class Ordini extends HttpServlet {
         DAO_Ordine daoOrdine = new DAO_Ordine(connessione);
         
         // controllo che tutti i prodotti siano forniti dal fornitore
-        for( ProdottoInfoCarrello prod : data.prodotti() ){
+        for( ProdottoCarrello prod : data.prodotti() ){
             try {
                 if( ( prod == null ) || !daoProdotto.isFornitoDaFornitore(prod.idProdotto(), data.idFornitore()) ){
                     risposta.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -140,7 +140,7 @@ public class Ordini extends HttpServlet {
         
         // calcolo il totale e il numero di articoli nel carrello
         double totale = 0;
-        for( ProdottoInfoCarrello prod : data.prodotti() ){
+        for( ProdottoCarrello prod : data.prodotti() ){
         	try {
         		totale += daoProdotto.getPrezzoScontato(prod.idProdotto(), data.idFornitore());
         	} catch (SQLException e) {
@@ -153,7 +153,7 @@ public class Ordini extends HttpServlet {
         double speseSpedizione = 0;
         if( ( fornitore.soglia() == null ) ||  ( totale < fornitore.soglia() ) ){
         	int quantita = 0;
-        	for( ProdottoInfoCarrello prod : data.prodotti() )
+        	for( ProdottoCarrello prod : data.prodotti() )
         		quantita += prod.quantita();
             try{
                 speseSpedizione = daoFornitore.getCostoSpedizione(data.idFornitore(), quantita);
@@ -168,7 +168,7 @@ public class Ordini extends HttpServlet {
 
         // creo la mappa con cui creare l'ordine
         Map<ProdottoDiUnFornitore,Integer> mappa = new HashMap<>();
-        for( ProdottoInfoCarrello prod : data.prodotti() ){
+        for( ProdottoCarrello prod : data.prodotti() ){
         	try {
 				mappa.put(new ProdottoDiUnFornitore(prod.idProdotto(), fornitore.id(), daoProdotto.getPrezzoScontato(prod.idProdotto(), fornitore.id()), daoProdotto.getSconto(prod.idProdotto(), fornitore.id())), prod.quantita());
 			} catch (SQLException e) {
