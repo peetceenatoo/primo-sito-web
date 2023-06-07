@@ -74,8 +74,6 @@ public class Visualizza extends HttpServlet {
         try {
         	// inserisco la nuova visualizzazione
             daoProdotto.setVisualizzato(((Utente)richiesta.getSession(false).getAttribute("utente")).email(),idProdotto);
-            // creo la lista di appoggio con cui costruire le info
-            tempCoppie = new ArrayList<Coppia<Fornitore,Coppia<Double,Double>>>();
             // creo una mappa di appoggio per riempire la lista
             tempMap = daoFornitore.getFornitoriConPrezzi(idProdotto);
         } catch (SQLException e) {
@@ -83,6 +81,7 @@ public class Visualizza extends HttpServlet {
             return;
         }
         // riempio la lista
+        tempCoppie = new ArrayList<Coppia<Fornitore,Coppia<Double,Double>>>();
         for( Fornitore f : tempMap.keySet() )
         	tempCoppie.add(new Coppia<Fornitore, Coppia<Double,Double>>(f, tempMap.get(f)));
         // creo info
