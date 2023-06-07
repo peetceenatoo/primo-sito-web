@@ -25,9 +25,11 @@
     background-color: #111;
 }
 
-.navbar form {
+.navbar button {
     margin-left: auto;
-    padding: 14px 16px;
+    margin-right: 16px;
+    margin-top: 14px;
+    margin-bottom: 14px;
 }
 
 table {
