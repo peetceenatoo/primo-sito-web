@@ -39,6 +39,24 @@ public class DAO_Prodotto{
         return null;
     }
     
+    public ProdottoDiUnFornitore getProdottoDiUnFornitore(int idProdotto, int idFornitore) throws SQLException {
+        // seleziono il prodotto
+    	String query = "SELECT * FROM PRODOTTO_FORNITORE WHERE IdProdotto = ? AND IdFornitore = ?";
+
+        // pre-compila la query se sintatticamente corretta
+        PreparedStatement statement = connessione.prepareStatement(query);
+        // imposto il parametro della query
+        statement.setInt(1, idProdotto);
+        statement.setInt(2, idFornitore);
+        // eseguo la query
+        ResultSet resultSet = statement.executeQuery();
+
+        // metto il risultato nella lista se presente e ritorno, altrimenti ritorno null
+        if( resultSet.next() )
+            return new ProdottoDiUnFornitore(resultSet.getInt("IdProdotto"), resultSet.getInt("IdFornitore"), resultSet.getDouble("Prezzo"), resultSet.getDouble("Sconto") );
+        return null;
+    }
+    
     public List<Prodotto> getCinqueProdottiHome(String email) throws SQLException {
     	List<Prodotto> ultimi;
     	
@@ -218,8 +236,8 @@ public class DAO_Prodotto{
         statement.executeUpdate();
     }
     
-    public List<Coppia<Integer,Integer>> getListino() throws SQLException{
-    	List<Coppia<Integer,Integer>> risultati = new ArrayList<>();
+    public List<ProdottoDiUnFornitore> getListino() throws SQLException {
+    	List<ProdottoDiUnFornitore> risultati = new ArrayList<>();
     	
     	// prendo tutte le informazioni necessarie sul prodotto con il prezzo già scontato
     	String query = "SELECT IdProdotto, IdFornitore FROM PRODOTTO_FORNITORE;";
@@ -230,9 +248,8 @@ public class DAO_Prodotto{
         ResultSet resultSet = statement.executeQuery();
 
         // metto i risultati nella lista e ritorno
-        while( resultSet.next() ){
-        	risultati.add(new Coppia<Integer,Integer>(resultSet.getInt("idProdotto"), resultSet.getInt("idFornitore")));
-        }
+        while( resultSet.next() )
+        	risultati.add(getProdottoDiUnFornitore(resultSet.getInt("IdProdotto"), resultSet.getInt("IdFornitore")));
         return risultati;
     }
      
