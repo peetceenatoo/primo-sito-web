@@ -1,0 +1,38 @@
+title HOME
+
+participant Home
+participant DAO_Prodotto
+participant Sessione
+participant Context
+participant TemplateEngine
+participant PaginaDiErrore
+
+participant [
+activate Home
+[->Home: doGet
+
+activate Sessione
+Home->Sessione: getAttribute("utente")
+Sessione->Home: return
+space
+deactivate Sessione
+
+Home->*DAO_Prodotto: new
+
+activate DAO_Prodotto
+alt try
+Home->DAO_Prodotto: getUltimiCinqueVisualizzati(email)
+DAO_Prodotto-->Home: return
+activate Context
+deactivate DAO_Prodotto
+destroy DAO_Prodotto
+Home->Context: setVariable("prodotti", ultimi)
+else catch
+Home->*PaginaDiErrore: INTERNAL SERVER ERROR
+destroy PaginaDiErrore
+space 
+deactivate Context
+end
+space
+activate TemplateEngine
+Home->TemplateEngine: process("home", ctx, risposta.getWriter())

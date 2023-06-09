@@ -1,0 +1,54 @@
+title Visualizza
+
+seq Event Apri Prodotto
+
+participant home-page.js
+participant Visualizza
+participant Sessione
+participant DAO_Prodotto
+participant DAO_Fornitore
+
+activate home-page.js
+activate Visualizza
+
+home-page.js ->Visualizza: AJAX GET (idProdotto)
+
+Visualizza->Sessione: getAttribute("utente")
+Sessione-->Visualizza: utente
+space
+activate DAO_Prodotto
+Visualizza->DAO_Prodotto:setVisualizzato(email, idProdotto)
+space 
+deactivate DAO_Prodotto
+destroy DAO_Prodotto
+
+activate DAO_Fornitore
+Visualizza->DAO_Fornitore: getFornitoriConPrezzo(idProdotto)
+DAO_Fornitore-->Visualizza: InfoProdottoCarrello
+space 
+deactivate DAO_Fornitore
+destroy DAO_Fornitore
+
+Visualizza-->home-page.js: risposta
+
+deactivate Visualizza
+space 
+destroy Visualizza
+
+alt risposta.status == 200
+home-page.js->home-page.js: apriDettagli(li,json)
+
+home-page.js->*Immagine: GET "/immagine?idProdotto=" + idProdotto
+activate Immagine
+Immagine->home-page.js: immagine
+deactivate Immagine
+space
+destroy Immagine
+
+else risposta.status == 401 || risposta.status == 403
+home-page.js->home-page.js: logout()
+else risposta.status == 200 && risposta.status == 401 && risposta.status == 403
+home-page.js->home-page.js: alert(errorMessage)
+end 
+
+end

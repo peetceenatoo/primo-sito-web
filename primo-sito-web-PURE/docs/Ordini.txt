@@ -1,0 +1,38 @@
+title Ordini
+
+participant Ordini
+participant Sessione
+participant DAO_Ordine
+
+participant Context
+participant TemplateEngine
+
+activate Ordini
+[->Ordini: doGet
+
+Ordini->Sessione: getAttribute("utente")
+Sessione->Ordini: utente
+
+Ordini->*DAO_Ordine: new
+activate DAO_Ordine
+alt try
+Ordini->DAO_Ordine: getOrdini(utente.email())
+DAO_Ordine->Ordini: ordini
+else catch
+Ordini->*PaginaDiErrore: INTERNAL SERVER ERROR
+destroy PaginaDiErrore
+end 
+space 
+deactivate DAO_Ordine
+destroy DAO_Ordine
+
+Ordini->Context: setVariable("ordini", ordini)
+Ordini->Context: setVariable("DAOfornitore", new DAO_Fornitore())
+Ordini->Context: setVariable("DAOfornitore", new DAO_Prodotto())
+
+alt try
+Ordini->TemplateEngine: process("ordini", ctx, risposta.getWriter())
+else catch
+Ordini->*PaginaDiErrore: INTERNAL SERVER ERROR
+destroy PaginaDiErrore
+end alt

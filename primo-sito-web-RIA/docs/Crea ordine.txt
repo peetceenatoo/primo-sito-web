@@ -1,0 +1,81 @@
+title Crea ordine
+
+seq Event Crea ordine
+
+participant home-page.js
+participant Carrello
+participant LocalStorage
+participant Ordini
+participant Sessione
+participant DAO_Prodotto
+participant DAO_Fornitore
+participant DAO_Ordine
+
+activate home-page.js
+activate Ordini
+
+home-page.js->home-page.js: inviaOrdine(idFornitore)
+
+activate LocalStorage
+home-page.js->LocalStorage: getItem("carrello")
+LocalStorage-->home-page.js: carrelloJSON
+deactivate LocalStorage
+
+home-page.js ->Ordini: AJAX POST ( LocalStorage.carrello.filter(x => x.idFornitore === idFornitore) )
+
+activate DAO_Fornitore
+
+Ordini->DAO_Fornitore: getFornitore(idFornitore)
+DAO_Fornitore-->Ordini: fornitore
+
+space
+deactivate DAO_Fornitore
+destroy DAO_Fornitore
+
+
+alt fornitore == null
+Ordini-->home-page.js: Error 400: BAD Request
+destroy home-page.js
+end
+
+Ordini->*DAO_Prodotto: new
+loop calcola totale ordine
+
+activate DAO_Prodotto
+Ordini->DAO_Prodotto: getPrezzo(idProdotto, idFornitore)
+DAO_Prodotto-->Ordini: tot
+deactivate DAO_Prodotto
+space 
+destroy DAO_Prodotto
+
+end loop
+
+Ordini->Sessione: getAttribute("utente")
+Sessione-->Ordini: utente
+space
+
+Ordini->DAO_Ordine: new
+activate DAO_Ordine
+Ordini->DAO_Ordine: creaOrdine(utente, nomeF, data, parametroCarrello.prodotti)
+deactivate DAO_Ordine
+space 
+destroy DAO_Ordine
+
+
+Ordini-->home-page.js: risposta
+
+alt risposta == 200
+home-page.js->home-page.js: show()
+else risposta == 401 || risposta == 403
+home-page.js->home-page.js: logout()
+else risposta != 200 || risposta != 401 || risposta != 403
+home-page.js->home-page.js: alert(errorMessage)
+end 
+
+
+
+
+
+
+
+end

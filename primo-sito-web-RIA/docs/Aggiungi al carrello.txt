@@ -1,0 +1,31 @@
+title Aggiungi al carrello
+
+seq Event Aggiungo al carrello
+
+participant home-page.js
+participant Carrello
+participant LocalStorage
+
+activate home-page.js
+activate Carrello
+
+home-page.js ->Carrello: aggiungiProdotto(idFornitore, idProdotto, quantita)
+
+Carrello->LocalStorage : getItem("carrello")
+LocalStorage-->Carrello: carrelloJSON
+
+alt carrelloJSON == null
+Carrello->Carrello: carrello = []
+
+else carrelloJSON != null
+Carrello->Carrello: carrello = JSON.parse(carrelloJSO)
+end alt
+
+Carrello->LS: setItem("carrello", JSON.stringfy(carrello))
+
+space 
+
+Carrello->Carrello: show()
+deactivate Carrello
+
+end

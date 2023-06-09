@@ -1,0 +1,21 @@
+title LOG OUT
+
+participant Logout
+participant Sessione
+participant Login
+
+participant [
+
+[->Logout: doPost
+
+activate Logout
+
+activate Sessione
+Logout ->Sessione: invalidate()
+space 
+deactivate Sessione
+
+activate Login
+Logout ->Login: redirect
+space
+deactivate Login

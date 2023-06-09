@@ -1,0 +1,35 @@
+title Risultati
+
+seq Event Ricerca
+
+participant home-page.js
+participant Risultati
+participant DAO_Prodotto
+
+activate home-page.js
+activate Servlet
+
+home-page.js ->Servlet: AJAX GET (queryString)
+
+space
+activate DAO_Prodotto
+Risultati->DAO_Prodotto: getProdotti(queryString)
+DAO_Prodotto-->Risultati: prodotti
+space 
+deactivate DAO_Prodotto
+destroy DAO_Prodotto
+Risultati-->home-page.js: risposta
+
+deactivate Risultati
+space 
+destroy Risultati
+
+alt risposta.status == 200
+home-page.js->home-page.js: show(risposta.responseContent)
+else risposta.status == 401 || risposta.status == 403
+home-page.js->home-page.js: logout()
+else risposta.status != 200 && risposta.status != 401 && risposta.status == 403
+home-page.js->home-page.js: alert(errorMessage)
+end 
+
+end

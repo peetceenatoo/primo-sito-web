@@ -1,0 +1,41 @@
+title Log In
+
+seq Event Login
+
+participant login.js
+participant Login
+participant DAO_Utente
+participant Sessione
+participant LocalStorage
+
+activate login.js
+activate Login
+
+login.js ->Login: AJAX POST (email, password)
+activate DAO_Utente
+Login->DAO_Utente: getUtenteConPassword(email, password)
+DAO_Utente-->Login: utente
+deactivate DAO_Utente
+destroy DAO_Utente
+
+alt utente == null
+Login-->login.js: 401
+else SQLException
+Login-->login.js: 500
+else utente != null
+Login->Sessione: setAttribute("utente", utente)
+Login-->login.js: 200 + utente.email
+end
+deactivate Login
+space 
+destroy Login
+
+alt status == 200
+login.js->LocalStorage: setItem("utente", risposta.responseText)
+login.js->Window : location.href = 'home-page.html'
+
+else status != 200
+login.js->login.js: alert()
+end 
+
+end

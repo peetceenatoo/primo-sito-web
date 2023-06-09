@@ -1,0 +1,35 @@
+title Aggiungi al carrello
+
+participant Carrello
+participant DAO_Prodotto
+participant DAO_Carrello
+
+activate Carrello
+[->Carrello: doPost
+Carrello->*DAO_Prodotto: new
+
+activate DAO_Prodotto
+alt try
+Carrello->DAO_Prodotto: isFornitoDa(idProdotto, idFornitore)
+DAO_Prodotto->Carrello: fornito
+else catch
+Carrello->*PaginaDiErrore: INTERNAL SERVER ERROR
+destroy PaginaDiErrore
+end 
+deactivate DAO_Prodotto
+destroy DAO_Prodotto
+
+alt fornito == false
+Carrello->*PaginaDiErrore: INTERNAL SERVER ERROR
+destroy PaginaDiErrore
+end alt
+
+Carrello -> *DAO_Carrello: new
+activate DAO_Carrello
+
+Carrello->DAO_Carrello: aggiungiProdotto(idProdotto, idFornitore, quantita)
+
+Carrello->Carrello: redirect
+space
+deactivate Carrello
+destroy Carrello

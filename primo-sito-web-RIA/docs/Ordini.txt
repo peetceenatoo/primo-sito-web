@@ -1,0 +1,42 @@
+title Ordini
+
+seq Event Ordini
+
+participant home-page.js
+participant Ordini
+participant Sessione
+participant DAO_Ordine
+
+activate home-page.js
+activate Ordini
+
+home-page.js ->Ordini: AJAX GET ()
+
+Ordini->Sessione: getAttribute("utente")
+Sessione-->Ordini: utente
+space
+activate DAO_Ordine
+Ordini->DAO_Ordine:getOrdini(utente.email())
+DAO_Ordine-->Ordini: ordini
+space 
+deactivate DAO_Ordine
+destroy DAO_Ordine
+
+Ordini-->home-page.js: risposta
+
+deactivate Ordini
+space 
+destroy Ordini
+
+alt risposta.status == 200
+home-page.js->home-page.js: show(risposta.responseContent)
+
+else risposta.status == 401 || risposta.status == 403
+home-page.js->home-page.js: logout()
+else risposta.status != 200 && risposta.status != 401 && risposta.status != 403
+home-page.js->home-page.js: alert(errorMessage)
+end 
+
+
+
+end

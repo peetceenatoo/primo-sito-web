@@ -1,0 +1,24 @@
+title Visualizza
+
+participant Visualizza
+participant Sessione
+participant DAO_Prodotto
+participant Risultati
+
+activate Visualizza
+[->Visualizza: doPost
+
+Visualizza->Sessione: getAttribute("utente")
+Sessione->Visualizza: utente
+
+Visualizza->*DAO_Prodotto: new
+activate DAO_Prodotto
+alt try
+Visualizza->DAO_Prodotto: getFotoPathFromCodiceProdotto(utente, idProdotto)
+else catch
+Visualizza->*PaginaDiErrore: INTERNAL SERVER ERROR
+destroy PaginaDiErrore
+end 
+
+space 
+Visualizza->*Risultati: redirect

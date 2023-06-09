@@ -1,0 +1,56 @@
+title Risultati
+
+participant Risultati
+participant DAO_Fornitore
+participant DAO_Prodotto
+participant TemplateEngine
+participant Context
+
+activate Risultati
+[->Risultati: doGet
+
+Risultati->*DAO_Fornitore: new
+activate DAO_Fornitore
+
+loop prodotti = prodottiAperti
+
+alt try
+Risultati->DAO_Fornitore: getFornitoriConPrezzo(prod)
+DAO_Fornitore->Risultati: fornitoriConPrezzo
+else catch
+Risultati->*PaginaDiErrore: INTERNAL SERVER ERROR
+destroy PaginaDiErrore
+end alt
+
+end loop
+deactivate DAO_Fornitore
+destroy DAO_Fornitore
+
+Risultati->*DAO_Prodotto: new
+activate DAO_Prodotto
+
+alt try
+Risultati->DAO_Prodotto: getProdotti(queryString)
+DAO_Prodotto->Risultati: risultati
+else catch
+Risultati->*PaginaDiErrore: INTERNAL SERVER ERROR
+lifelinestyle PaginaDiErrore ::dashed
+destroy PaginaDiErrore
+end try
+
+deactivate DAO_Prodotto
+destroy DAO_Prodotto
+
+Risultati->Context: setVariable("risultati", risultati)
+Risultati->Context:setVariable("DAOcarrello", new DAO_Carrello())
+Risultati->Context: setVariable("prodottiAperti", prodottiAperti)
+
+alt try
+Risultati->TemplateEngine: process("risultati", ctx, risposta.getWriter())
+else catch
+Risultati->*PaginaDiErrore: INTERNAL SERVER ERROR
+destroy PaginaDiErrore
+end 
+
+
+

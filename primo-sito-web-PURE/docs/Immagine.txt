@@ -1,0 +1,41 @@
+title Immagine
+
+participant Immagine
+participant DAO_Prodotto
+participant File
+
+activate Immagine
+[->Immagine: doGet
+Immagine->*DAO_Prodotto: new
+activate DAO_Prodotto
+alt try
+Immagine->DAO_Prodotto: getPercorsoFoto(idProdotto)
+DAO_Prodotto-->Immagine: risultato
+else catch
+Immagine->*PaginaDiErrore: INTERNAL SERVER ERROR
+destroy PaginaDiErrore
+end 
+
+space 
+deactivate DAO_Prodotto
+destroy DAO_Prodotto
+
+alt risultato == null
+Immagine->*PaginaDiErrore: INTERNAL SERVER ERROR
+destroy PaginaDiErrore
+end 
+
+
+Immagine->*File: new(percorsoBase, risultato)
+File->Immagine: file
+activate File
+space
+deactivate File
+
+alt file.exists() && !file.isDirectory()
+Immagine->*Foto: write
+
+else !file.exists() || file.isDirectory()
+Immagine->*FotoNonTrovato: write
+end
+

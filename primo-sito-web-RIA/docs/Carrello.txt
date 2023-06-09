@@ -1,0 +1,55 @@
+title Carrello
+
+seq Event Carrello
+
+participant home-page.js
+participant InfoCarrello
+participant DAO_Prodotto
+participant DAO_Fornitore
+
+activate home-page.js
+activate InfoCarrello
+
+home-page.js ->home-page.js: showCarrello()
+
+home-page.js->Servlet: AJAX GET(carrello)
+InfoCarrello->*DAO_Fornitore: new
+InfoCarrello->*DAO_Fornitore: new
+
+loop Fornitore : Carrello
+activate DAO_Fornitore
+InfoCarrello->DAO_Fornitore: getFornitore(idFornitore)
+DAO2-->InfoCarrello: fornitore
+
+loop ProdottoDiUnFornitore : CarrelloFornitore
+
+activate DAO_Prodotto
+InfoCarrello->DAO_Prodotto: getPrezzo(idProdotto, idFornitore)
+DAO_Prodotto-->InfoCarrello: prezzo
+deactivate DAO_Prodotto
+
+end loop
+
+deactivate DAO_Fornitore
+space 
+end loop
+destroy DAO_Fornitore
+destroy DAO_Prodotto
+
+InfoCarrello-->home-page.js: risposta
+
+deactivate InfoCarrello
+space 
+destroy InfoCarrello
+
+alt risposta.status == 200
+home-page.js->home-page.js: riempiDettagliCarrello(risposta.responseContent)
+else risposta.status == 401 || risposta.status == 403
+home-page.js->home-page.js: logout()
+else risposta.status != 200 || risposta.status != 401 || risposta.status != 403
+home-page.js->home-page.js: alert(errorMessage)
+end 
+deactivate home-page.js
+destroy home-page.js
+
+end

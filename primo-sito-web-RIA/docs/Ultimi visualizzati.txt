@@ -1,0 +1,40 @@
+title Get Ultimi Visualizzati
+
+seq Event Load Home
+
+participant home-page.js
+participant UltimiVisualizzati
+participant DAO_Prodotto
+participant Sessione
+
+participant [
+
+activate home-page.js
+activate UltimiVisualizzati
+
+home-page.js ->UltimiVisualizzati: AJAX GET 
+
+UltimiVisualizzati->Sessione: getAttribute("utente")
+Session-->UltimiVisualizzati: utente
+space
+activate DAO_Prodotto
+DAO_Prodotto->DAO_Prodotto: getUltimiCinqueVisualizzati(email)
+DAO_Prodotto-->UltimiVisualizzati: prodotti
+space 
+deactivate DAO_Prodotto
+destroy DAO_Prodotto
+UltimiVisualizzati-->home-page.js: 200 + JSON(prodotti) || Error
+
+deactivate UltimiVisualizzati
+space 
+destroy UltimiVisualizzati
+
+alt 200
+home-page.js->home-page.js: show(json)
+else 401 || 403
+home-page.js->home-page.js: logout()
+else Errors
+home-page.js->home-page.js: alert(error)
+end 
+
+end

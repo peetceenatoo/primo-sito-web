@@ -1,0 +1,22 @@
+title Carrello
+
+participant Carrello
+participant Context
+participant TemplateEngine
+
+activate Carrello
+[->Carrello: doGet
+
+Carrello->Context: setVariable("carrello", new DAO_Carrello().getCarrello())
+Carrello->Context: setVariable("DAOprodotto", new DAO_Prodotto())
+Carrello->Context: setVariable("DAOfornitore", new DAO_Fornitore())
+
+alt try
+Carrello->TemplateEngine: process("carrello", ctx, risposta.getWriter())
+else catch
+Carrello->*PaginaDiErrore: INTERNAL SERVER ERROR
+destroy PaginaDiErrore
+end 
+
+
+

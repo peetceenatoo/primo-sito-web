@@ -1,0 +1,48 @@
+title LOG IN
+
+participant Login
+participant DAO_Utente
+participant Sessione
+participant Home
+
+participant [
+
+activate Login
+
+[->Login: doPost
+Login->*DAO_Utente: new
+
+
+activate DAO_Utente
+Login->DAO_Utente: isValida(email)
+DAO_Utente-->Login: valida
+Login->DAO_Utente: isRegistrato(email)
+DAO_Utente-->Login: registrato
+
+alt valida == true && registrato == true
+
+Login->DAO_Utente: getUtenteConPassword(email, password)
+
+DAO_Utente-->Login: utente
+space 
+deactivate DAO_Utente
+space 
+destroy DAO_Utente
+alt utente != null
+Login->Sessione: setAttribute("utente", utente)
+
+Login->*Home: redirect
+activate Home
+deactivate Home
+
+space
+else result == null
+
+Login->Login: redirect "/login?error=true" 
+space
+end
+
+else valida == false || registrato == false
+Login->Login: redirect "/login?error=true" 
+space
+end 

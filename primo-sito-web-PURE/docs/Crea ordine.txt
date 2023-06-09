@@ -1,0 +1,71 @@
+title Crea ordine
+
+participant Ordini
+participant DAO_Carrello
+participant Sessione
+participant DAO_Ordine
+participant DAO_Prodotto
+participant DAO_Fornitore
+
+activate Ordini
+[->Ordini: doPost
+
+Ordini->*DAO_Carrello: new
+activate DAO_Carrello
+Ordini->DAO_Carrello: getCarrello()
+DAO_Carrello->Ordini: carrello
+space 
+deactivate DAO_Carrello
+
+Ordini->*DAO_Prodotto: new
+activate DAO_Prodotto
+
+alt try
+Ordini->DAO_Prodotto: getPrezzo(idProdotto, idFornitore)
+DAO_Prodotto->Ordini: prezzo
+else catch
+Ordini->*PaginaDiErrore: INTERNAL SERVER ERROR
+destroy PaginaDiErrore
+end alt
+
+deactivate DAO_Prodotto
+destroy DAO_Prodotto
+
+end loop
+
+Ordini->*DAO_Fornitore: new
+activate DAO_Fornitore
+
+alt try
+Ordini->DAO_Fornitore: getFornitore(idFornitore)
+DAO_Fornitore->Ordini: fornitore
+else catch
+Ordini->*PaginaDiErrore: INTERNAL SERVER ERROR
+destroy PaginaDiErrore
+end alt
+deactivate DAO_Fornitore
+destroy DAO_Fornitore
+
+Ordini->Sessione: getAttribute("utente")
+Sessione->Ordini: utente
+
+Ordini->*DAO_Ordine: new
+activate DAO_Ordine
+alt try
+Ordini->DAO_Ordine: creaOrdine(utente, nomeFornitore, data, prodotti)
+else catch
+Ordini->*PaginaDiErrore: INTERNAL SERVER ERROR
+destroy PaginaDiErrore
+end 
+space 
+deactivate DAO_Ordine
+destroy DAO_Ordine
+
+activate DAO_Carrello
+
+Ordini->DAO_Carrello: rimuoviProdotto(idFornitore)
+space 
+deactivate DAO_Carrello
+destroy DAO_Carrello
+
+Ordini->Ordini: redirect

@@ -1,0 +1,30 @@
+title Logout
+
+seq Event Logout
+
+participant home-page.js
+participant Logout
+participant Sessione
+participant LocalStorage
+
+participant [
+
+activate home-page.js
+
+activate Logout
+
+
+home-page.js->Logout: AJAX POST
+
+Logout->Sessione: invalidate()
+space 
+
+Logout->home-page.js: risposta
+
+deactivate Logout
+space 
+destroy Logout
+
+home-page.js->LS: clear()
+home-page.js->Window: location.href("login.html")
+end
