@@ -15,7 +15,6 @@ public class DAO_Utente {
         this.connessione = connessione;
     }
 
-
     public boolean isRegistrato(String email) throws SQLException {
         // prendo la mail
     	String query = "SELECT Email FROM UTENTE WHERE BINARY Email = ?";

@@ -58,7 +58,7 @@
             // creo un oggetto-pagina Carrello
             carrello = new Carrello(this.container);
             // creo un oggetto-funzionalità Ordine
-            ordini = new ManagerOrdine(this.container);
+            ordini = new Ordini(this.container);
 
 			// assegno al bottone carrello la funzione
             document.getElementById('aCarrello').onclick = function(){
@@ -147,8 +147,8 @@
 	            inputSearch.name = "queryString";
 	            inputSearch.required = true;
 	            formSearch.appendChild(inputSearch);
-				// in caso di invio, chiamo il metodo handleSearch (bubbling phase)
-	            formSearch.addEventListener("submit", search.handleSearch);
+				// in caso di invio, chiamo il metodo cerca
+	            formSearch.addEventListener("submit", search.cerca);
 	        }
 
 			// recupero dal server gli ultimi visualizzati e gestisco la risposta in base allo stato
@@ -243,7 +243,7 @@
         const self = this;
 
 		// questo metodo effettua la ricerca dei risultati
-        this.handleSearch = function(e){
+        this.cerca = function(e){
 			// impedisco l'azione di default di submit (action)
             e.preventDefault();
             // svuoto la pagina
@@ -1116,7 +1116,7 @@
     
     /************************************************************************************/
 
-    function ManagerOrdine(container){
+    function Ordini(container){
         this.container = container;
 
 		// metodo che recupera gli ordini

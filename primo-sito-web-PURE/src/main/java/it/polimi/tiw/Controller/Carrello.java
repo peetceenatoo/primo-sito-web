@@ -132,7 +132,7 @@ public class Carrello extends HttpServlet {
         // creo un dao carrello
         DAO_Carrello daoCarrello = new DAO_Carrello(richiesta.getSession(false), this.connessione);
         // aggiungo il prodotto al carrello
-        daoCarrello.aggiungiProdottoAlCarrello(idProdotto, idFornitore, quant);
+        daoCarrello.aggiungiAlCarrello(idProdotto, idFornitore, quant);
 
         // mando il redirect al carrello
         risposta.sendRedirect(getServletContext().getContextPath() + "/carrello");

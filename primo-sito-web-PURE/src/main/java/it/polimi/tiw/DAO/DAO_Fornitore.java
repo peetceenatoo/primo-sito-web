@@ -76,7 +76,7 @@ public class DAO_Fornitore {
         return fasceDiSpedizione;
 	}
 	
-	public Map<Fornitore, Double> getFornitori(int idProdotto) throws SQLException {
+	public Map<Fornitore, Double> getFornitoriConPrezzo(int idProdotto) throws SQLException {
 		Map<Fornitore, Double> fornitori;
 		
 		// prendo fornitore e prezzo relativo per il prodotto richiesto

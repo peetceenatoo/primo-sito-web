@@ -77,7 +77,7 @@ public class DAO_Fornitore {
         return fasceDiSpedizione;
 	}
 	
-	public Map<Fornitore, Double> getFornitori(int idProdotto) throws SQLException {
+	public Map<Fornitore, Double> getFornitoriConPrezzo(int idProdotto) throws SQLException {
 		Map<Fornitore, Double> fornitori;
 		
 		// prendo fornitore e prezzo relativo per il prodotto richiesto
@@ -129,7 +129,7 @@ public class DAO_Fornitore {
         	return rs.getInt("Prezzo");
     }
 	
-	public Map<Fornitore, Coppia<Double,Double>> getFornitoriConPrezzi(int idProdotto) throws SQLException {
+	public Map<Fornitore, Coppia<Double,Double>> getFornitoriConPrezzoSconto(int idProdotto) throws SQLException {
 		Map<Fornitore, Coppia<Double,Double>> fornitori;
 		
 		// prendo tutti i fornitori, con il prezzo scontato e lo sconto relativi per il prodotto specificato 

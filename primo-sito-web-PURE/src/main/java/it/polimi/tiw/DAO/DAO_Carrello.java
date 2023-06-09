@@ -20,7 +20,7 @@ public class DAO_Carrello {
         this.connessione = connessione;
     }
     
-    public void aggiungiProdottoAlCarrello(int idProdotto, int idFornitore, int quantita){
+    public void aggiungiAlCarrello(int idProdotto, int idFornitore, int quantita){
     	int prec;
         Map<Integer, Map<Integer, Integer>> carrello;
         

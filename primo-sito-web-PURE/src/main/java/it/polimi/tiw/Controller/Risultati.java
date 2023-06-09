@@ -79,7 +79,7 @@ public class Risultati extends HttpServlet {
 	                return;
 	            }
 	        	try {
-	        		prodottiAperti.put(idProdotto, daoFornitore.getFornitori(idProdotto));
+	        		prodottiAperti.put(idProdotto, daoFornitore.getFornitoriConPrezzo(idProdotto));
 	        	} catch(SQLException e) {
 	                risposta.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore nel recupero dei fornitori.");
 	                return;

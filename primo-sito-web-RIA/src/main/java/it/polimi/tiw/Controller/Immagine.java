@@ -22,7 +22,7 @@ import it.polimi.tiw.Utility.ConnectionInitializer;
 
 @WebServlet(value="/immagine")
 @MultipartConfig
-public class Image extends HttpServlet {
+public class Immagine extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private String percorsoBase;

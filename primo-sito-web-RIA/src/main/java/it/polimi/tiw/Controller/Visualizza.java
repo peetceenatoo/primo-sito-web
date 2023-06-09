@@ -75,7 +75,7 @@ public class Visualizza extends HttpServlet {
         	// inserisco la nuova visualizzazione
             daoProdotto.setVisualizzato(((Utente)richiesta.getSession(false).getAttribute("utente")).email(),idProdotto);
             // creo una mappa di appoggio per riempire la lista
-            tempMap = daoFornitore.getFornitoriConPrezzi(idProdotto);
+            tempMap = daoFornitore.getFornitoriConPrezzoSconto(idProdotto);
         } catch (SQLException e) {
             risposta.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return;
