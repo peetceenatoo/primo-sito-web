@@ -20,7 +20,7 @@ import it.polimi.tiw.DAO.DAO_Prodotto;
 import it.polimi.tiw.Utility.ConnectionInitializer;
 
 @WebServlet(value="/immagine")
-public class Image extends HttpServlet {
+public class Immagine extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private String percorsoBase;

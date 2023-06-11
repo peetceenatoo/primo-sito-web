@@ -42,7 +42,7 @@ public class Immagine extends HttpServlet {
 
         // prendo l'id del prodotto 
         int idProdotto;
-        try{
+        try {
             idProdotto = Integer.parseInt(richiesta.getParameter("idProdotto"));
         } catch (NumberFormatException e) {
             risposta.setStatus(HttpServletResponse.SC_BAD_REQUEST);
