@@ -893,7 +893,7 @@
                     let tdImg = document.createElement('td');
                     riga.appendChild(tdImg);
                     let img = document.createElement('img');
-                    img.src = "immagine?idProdotto=" + p.id;
+                    img.src = "immagine?idProdotto=" + p.idProdotto;
                     tdImg.appendChild(img);
 					// aggiungo la quantita
                     let tdQuantita = document.createElement('td');
