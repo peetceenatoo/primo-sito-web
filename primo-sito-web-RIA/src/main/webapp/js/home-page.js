@@ -435,7 +435,7 @@
 			// aggiungo il corpo della tabella
             let tableBody = document.createElement('tbody');
             table.appendChild(tableBody);
-
+            
 			// per ogni fornitore aggiungo una riga alla tabella
             for( let i=0; i<dettagli.secondo.length; i++ ){
 				// prendo dai dettagli l'i-esimo fornitore e aggiungo una riga
@@ -543,7 +543,7 @@
 		// metodo che chiude i dettagli di un risultato
         this.chiudiDettagli = function(li){
             let divDetails = li.querySelectorAll("div");
-            if (divDetails != null)
+            if( divDetails != null )
                 divDetails.forEach( node => {li.removeChild(node)})
         }
 
@@ -843,7 +843,7 @@
 				// aggiungo il bottone per ordinare
                 let btnOrdina = document.createElement('button');
                 btnOrdina.textContent = "Ordina";
-                btnOrdina.setAttribute('data-idfornitore', infoFornitore.id);
+                btnOrdina.setAttribute('data-idfornitore', infoFornitore.idFornitore);
                 // specificando la funzione onclick
                 btnOrdina.onclick = function(e){
 					// controllo che l'id del fornitore sia un intero
