@@ -17,13 +17,18 @@
             <h2 th:if="${!risultati.isEmpty()}">Risultati ricerca:</h2>
             <div class="risultati">
                 <ul class="listview">
-                    <li class="listview-row" th:if="${!risultati.isEmpty()}" th:each=" risultato : ${risultati}">
+                    <li class="listview-row" th:if="${!risultati.isEmpty()}" th:each="risultato : ${risultati}">
+                        <!-- per ogni risultato aggiungo una riga, che consiste in un bottone di submit di un form: Risultati visualizza gli aperti che riceve, Visualizza visualizza e aggiunge il nuovo aperto -->
                         <form th:action="@{${prodottiAperti.keySet().contains(risultato.primo.id) ? '/risultati' : '/visualizza'}}" th:method="${prodottiAperti.keySet().contains(risultato.primo.id) ? 'GET' : 'POST'}">
+                            <!-- ha un campo nascosto "queryString" che contiene la queryString da inviare come parametro-->
                             <input type="hidden" name="queryString" th:value="${queryString}" />
-                            <input type="hidden" name="aperto" th:each=" id : ${prodottiAperti.keySet()}" th:if="${!id.equals(risultato.primo.id)}" th:value="${id}"/>
+                            <!-- ha vari campi nascosti "aperto" che contengono i rispettivi id dei prodotti aperti (tranne sè stesso, affinchè venga chiuso quando viene cliccato da aperto) da inviare come parametri -->
+                            <input type="hidden" name="aperto" th:each="id : ${prodottiAperti.keySet()}" th:if="${!id.equals(risultato.primo.id)}" th:value="${id}"/>
+                            <!-- se non è aperto ha un campo nascosto "visualizzato" che contiene il suo id da inviare come parametro (viene letto dalla servlet Visualizza)-->
                             <input type="hidden" name="visualizzato" th:value="${risultato.primo.id}" th:if="${!prodottiAperti.keySet().contains(risultato.primo.id)}" />
                             <input class="listview-row-title" type="submit" th:value="${risultato.primo.id + ' - ' + risultato.primo.nome + ': ' + #numbers.formatDecimal(risultato.secondo, 1, 'COMMA', 2, 'POINT') + ' €'}">
                         </form>
+                        <!-- se il prodotto è aperto, aggiungo i dettagli -->
                         <div th:if="${prodottiAperti.keySet().contains(risultato.primo.id)}">
                             <img th:src="@{${'/immagine?idProdotto=' + risultato.primo.id}}" alt="Immagine"/>
                             <p th:text="${'Nome: ' + risultato.primo.nome}"></p>
