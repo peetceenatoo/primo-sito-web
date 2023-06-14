@@ -142,7 +142,7 @@ public class Ordini extends HttpServlet {
         double totale = 0;
         for( ProdottoCarrello prod : data.prodotti() ){
         	try {
-        		totale += daoProdotto.getPrezzoScontato(prod.idProdotto(), data.idFornitore());
+        		totale += daoProdotto.getPrezzoScontato(prod.idProdotto(), data.idFornitore())*prod.quantita();
         	} catch (SQLException e) {
         		risposta.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore nel calcolo del totale.");
                 return;
