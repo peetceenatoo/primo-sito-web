@@ -80,7 +80,6 @@ public class DAO_Prodotto{
     	
     	// assumo che la categoria di default sia 'Tecnologia'
         String query = "SELECT * FROM PRODOTTO P WHERE P.Categoria = 'Tecnologia' AND P.Id IN (SELECT IdProdotto FROM PRODOTTO_FORNITORE WHERE Sconto > 0.00)";
-        
         // escludo eventuali prodotti da escludere aggiungendo condizioni sui rispettivi Id alla query
         if( !daEscludere.isEmpty() ){
             query += " AND P.Id NOT IN (";
@@ -91,7 +90,6 @@ public class DAO_Prodotto{
                 }
             query += " ) ";
         }
-        
         // disordino il risultato e prendo solo 5 righe
         query += " ORDER BY RAND() LIMIT 5";
 

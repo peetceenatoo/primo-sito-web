@@ -1,12 +1,6 @@
 package it.polimi.tiw.Filter;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -34,7 +28,6 @@ public class FiltroDefault implements Filter {
     public void doFilter(ServletRequest richiesta, ServletResponse risposta, FilterChain chain) throws IOException, ServletException {
     	// faccio il cast della richiesta prendo la sessione
     	HttpServletRequest richiestaHTTP = (HttpServletRequest) richiesta;
-        HttpSession sessione = richiestaHTTP.getSession();
 
         // a meno che io stia chiedendo il css (sia loggato che non, posso vederlo), redirecto ad home
         if( richiestaHTTP.getPathInfo() != "/css/stylesheet.css" ){

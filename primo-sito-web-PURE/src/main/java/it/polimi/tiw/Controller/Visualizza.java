@@ -5,14 +5,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.web.servlet.JavaxServletWebApplication;
 
 import it.polimi.tiw.Bean.Utente;
 import it.polimi.tiw.DAO.DAO_Prodotto;
 import it.polimi.tiw.Utility.ConnectionInitializer;
-import it.polimi.tiw.Utility.TemplateInitializer;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -98,12 +94,11 @@ public class Visualizza extends HttpServlet {
             return;
         }
 
-        // mando il redirect ai risultati
+        // mando il redirect ai risultati aggiungendo il nuovo aperto e tutti quelli che erano aperti
         percorso = getServletContext().getContextPath() + "/risultati" + "?queryString=" + queryString + "&aperto=" + idVisualizzato;
         if( aperti != null )
-            for( String s : aperti ){
+            for( String s : aperti )
                 percorso += "&aperto=" + s;
-            }
         risposta.sendRedirect(percorso);
     }
 

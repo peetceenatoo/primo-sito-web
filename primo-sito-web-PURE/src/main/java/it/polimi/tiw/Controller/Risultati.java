@@ -50,7 +50,7 @@ public class Risultati extends HttpServlet {
     	// imposto la codifica per leggere i parametri, coerentemente all'HTML
         richiesta.setCharacterEncoding("UTF-8");
 
-        // leggo i parametri della richiesta
+        // leggo il parametro queryString
         String queryString = richiesta.getParameter("queryString");
         
         // se la queryString è nulla o vuota rimando alla home
@@ -66,13 +66,12 @@ public class Risultati extends HttpServlet {
         aperti = richiesta.getParameterValues("aperto");
         // istanzio la mappa per i prodotti aperti
         prodottiAperti = new HashMap<>();
-        
         // se l'array di id non è vuoto, metto nella mappa tutti i prodotti aperti
         if( aperti != null ){
         	for( String s : aperti ){
         		int idProdotto;
 	            // prendo l'id del prodotto aperto
-	        	try{
+	        	try {
 	                idProdotto = Integer.parseInt(s);
 	            } catch (NumberFormatException e) {
 	                risposta.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parametro Id Prodotto mal formato.");
