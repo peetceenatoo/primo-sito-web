@@ -108,9 +108,9 @@ public class Ordini extends HttpServlet {
         }
 
         // prendo l'id del fornitore
-        try{
+        try {
             idFornitore = Integer.parseInt(idFornitoreS);
-        }catch (NumberFormatException ex){
+        } catch(NumberFormatException ex) {
             risposta.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parametro IdFornitore mal formato.");
             return;
         }
@@ -193,7 +193,7 @@ public class Ordini extends HttpServlet {
 			}
      	}
      		
-     	// creo un ordine (con la collect converto la mappa in una mappa che ha un ProdottoDiUnFornitore come chiave)
+     	// creo un ordine
         try {
 			daoOrdine.creaOrdine(utente, fornitore.nome(), speseSpedizione, totale, temp);
 		} catch (SQLException e) {
