@@ -1,5 +1,7 @@
-# Progetto di TIW
+# Progetto di Tecnologie Informatiche per il Web (TIW) 2022/23
 
-Anno accademico 2022-2023<br>
+Piccinato Mattia [@peetceenatoo](https://github.com/peetceenatoo)<br>
 
-Piccinato Mattia [@peetceenatoo](https://github.com/peetceenatoo)
+Tomcat 9<br>
+Java EE 8<br>
+Thymeleaf 3.1.1
