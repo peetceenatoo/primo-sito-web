@@ -21,7 +21,7 @@
 
     <context-param>
         <param-name>percorsoImmagini</param-name>
-        <param-value>C:\\Users\\picci\\OneDrive\\Desktop\\Uni\\Terzo anno\\Secondo semestre\\Tecnologie per il web\\Progetto\\img\\</param-value>
+        <param-value></param-value>
     </context-param>
 
 </web-app>
