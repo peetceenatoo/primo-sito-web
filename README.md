@@ -1,4 +1,4 @@
-# Progetto di Tecnologie Informatiche per il Web (TIW) 2022/23 - PoliMi
+# PoliMi - Progetto di Tecnologie Informatiche per il Web (TIW) 2022/23
 
 Piccinato Mattia [@peetceenatoo](https://github.com/peetceenatoo)<br>
 
