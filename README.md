@@ -6,7 +6,7 @@ In this repository, a complete website for E-commerce is provided in _two_ versi
 - _Pure HTML_<br/>
 - _Rich Internet Application_<br/>
 
-To be honest, JavaScript is not my thing — the RIA version is just a lot of copy and paste. Enjoy.
+I am not going to lie, JavaScript is not my thing — the RIA version is just a bunch of copy and paste from Stack Overflow. Enjoy.
 
 ## Language
 
